@@ -1,0 +1,1980 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+<title>百世登仙 · 文字轮回修仙</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Serif+SC:wght@400;600;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --bg:#0b0e11; --panel:#12161b; --panel2:#161b22; --line:#2a313a;
+  --tx:#d8d0bd; --dim:#8b8676; --gold:#c9a86a; --gold2:#e8cf9a;
+  --red:#b8433a; --teal:#5e8f8a; --pink:#c58a9a; --purple:#8f7ab5;
+}
+*{box-sizing:border-box;margin:0;padding:0;-webkit-tap-highlight-color:transparent}
+html,body{height:100%}
+body{
+  background:var(--bg);color:var(--tx);
+  font-family:'Noto Serif SC','STKaiti','KaiTi',serif;
+  display:flex;justify-content:center;
+  background-image:radial-gradient(ellipse 80% 50% at 50% -10%,#1a2028 0%,var(--bg) 60%);
+}
+#app{width:100%;max-width:560px;min-height:100vh;position:relative;display:flex;flex-direction:column}
+.scr{display:none;flex:1;flex-direction:column;animation:fadein .45s ease}
+.scr.on{display:flex}
+@keyframes fadein{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+@keyframes floaty{0%,100%{transform:translateY(0)}50%{transform:translateY(-6px)}}
+@keyframes pulse{0%,100%{box-shadow:0 0 0 0 rgba(201,168,106,0)}50%{box-shadow:0 0 18px 2px rgba(201,168,106,.35)}}
+@keyframes sealpop{from{opacity:0;transform:scale(1.8) rotate(-14deg)}to{opacity:1;transform:scale(1) rotate(-8deg)}}
+
+/* 图槽 */
+.art{position:relative;overflow:hidden;background:#0e1216}
+.art img{width:100%;height:100%;object-fit:cover;display:block}
+.art-fb{display:flex;align-items:center;justify-content:center;
+  background:linear-gradient(160deg,#1a222b,#0d1116 70%)}
+.art-fb span{font-size:56px;font-weight:900;color:rgba(201,168,106,.55);
+  border:2px solid rgba(179,67,58,.65);padding:8px 18px;transform:rotate(-8deg);
+  font-family:'STKaiti','KaiTi',serif;letter-spacing:4px}
+
+/* 标题页 */
+#scr-title{justify-content:flex-end;position:relative;min-height:100vh}
+#title-art{position:absolute;inset:0}
+#title-art:after{content:'';position:absolute;inset:0;
+  background:linear-gradient(to top,var(--bg) 4%,rgba(11,14,17,.35) 40%,rgba(11,14,17,.15))}
+#title-box{position:relative;padding:26px 22px 34px;text-align:center}
+#title-box h1{font-size:54px;font-weight:900;letter-spacing:14px;color:var(--gold2);
+  text-shadow:0 2px 24px rgba(0,0,0,.8);margin-left:14px}
+#title-box .sub{margin-top:10px;color:var(--dim);letter-spacing:5px;font-size:14px}
+.seal{display:inline-block;background:var(--red);color:#f3e6d8;font-weight:900;
+  padding:5px 9px;font-size:13px;letter-spacing:3px;transform:rotate(-8deg);
+  box-shadow:0 2px 10px rgba(0,0,0,.6);animation:sealpop .6s ease .3s both}
+#title-btns{margin-top:26px;display:flex;flex-direction:column;gap:12px}
+#title-foot{margin-top:22px;font-size:11px;color:#5c584c;letter-spacing:1px}
+
+/* 通用按钮 */
+.btn{display:block;width:100%;padding:13px 14px;border:1px solid var(--line);
+  background:var(--panel);color:var(--tx);font-size:15px;letter-spacing:2px;
+  cursor:pointer;border-radius:6px;font-family:inherit;transition:.15s;text-align:center}
+.btn:active{transform:scale(.97)}
+.btn:disabled{opacity:.38;cursor:not-allowed}
+.btn.gold{background:linear-gradient(160deg,#3a2f1c,#241d12);border-color:#6b5a35;color:var(--gold2);font-weight:600}
+.btn.gold:not(:disabled){animation:pulse 2.2s infinite}
+.btn.red{background:linear-gradient(160deg,#3a1d1a,#241210);border-color:#6b3535;color:#e0a49e}
+.btn.mini{width:auto;display:inline-block;padding:7px 14px;font-size:13px}
+.btn.ghost{background:transparent;border-color:var(--line);color:var(--dim)}
+
+/* 卡片 */
+.card{background:var(--panel);border:1px solid var(--line);border-radius:10px;
+  padding:16px;margin:10px 14px;position:relative}
+.card:before{content:'';position:absolute;inset:5px;border:1px solid rgba(201,168,106,.14);
+  border-radius:7px;pointer-events:none}
+.card .corner{position:absolute;width:14px;height:14px;border-color:var(--gold);border-style:solid;opacity:.55}
+.c-tl{top:-1px;left:-1px;border-width:2px 0 0 2px;border-radius:10px 0 0 0}
+.c-tr{top:-1px;right:-1px;border-width:2px 2px 0 0;border-radius:0 10px 0 0}
+.c-bl{bottom:-1px;left:-1px;border-width:0 0 2px 2px;border-radius:0 0 0 10px}
+.c-br{bottom:-1px;right:-1px;border-width:0 2px 2px 0;border-radius:0 0 10px 0}
+
+/* 开局页 */
+#scr-roll{padding:16px 0 30px}
+#roll-name{text-align:center;font-size:34px;font-weight:900;letter-spacing:8px;margin:14px 0 2px;color:var(--gold2)}
+#roll-sub{text-align:center;color:var(--dim);font-size:12px;letter-spacing:3px;margin-bottom:8px}
+.rgrid{display:flex;gap:10px;margin:10px 14px}
+.rgrid .card{flex:1;margin:0}
+.olabel{font-size:11px;color:var(--dim);letter-spacing:2px;margin-bottom:5px}
+.chip{display:inline-block;padding:3px 10px;border:1px solid var(--line);border-radius:20px;
+  font-size:12px;margin:2px 4px 2px 0;background:var(--panel2)}
+.chip.gold{border-color:#6b5a35;color:var(--gold2)}
+.chip.red{border-color:#6b3535;color:#dd9a92}
+.chip.teal{border-color:#3f5f5c;color:#9cc3be}
+.chip.pink{border-color:#6b4a55;color:#e0aab8}
+.chip.purple{border-color:#574a75;color:#b6a6da}
+#roll-fates{margin:10px 14px}
+.fate-row{padding:8px 0;border-bottom:1px dashed #232930}
+.fate-row:last-child{border-bottom:none}
+.fate-row b{color:var(--gold)}
+.fate-row p{font-size:13px;color:var(--dim);margin-top:2px}
+#roll-btns{display:flex;gap:10px;margin:16px 14px 0}
+#roll-btns .btn{flex:1}
+#roll-tal{margin:8px 14px;font-size:12px;color:var(--dim);line-height:1.9}
+
+/* 主界面 */
+#hdr{display:flex;align-items:center;justify-content:space-between;padding:14px 16px 6px}
+#hdr .who{font-size:17px;font-weight:600;letter-spacing:2px}
+#hdr .who em{font-style:normal;color:var(--gold);font-size:14px;margin-left:8px}
+#hdr .who .world{font-size:11px;color:var(--dim);margin-left:8px;letter-spacing:1px}
+#btn-info{background:none;border:1px solid var(--line);color:var(--dim);width:34px;height:34px;
+  border-radius:8px;font-size:16px;cursor:pointer;font-family:inherit}
+#bars{padding:4px 16px}
+.brow{display:flex;align-items:center;gap:8px;margin:5px 0;font-size:12px;color:var(--dim)}
+.brow .bl{width:34px;flex:none;letter-spacing:1px}
+.bar{flex:1;height:7px;background:#1a2028;border-radius:4px;overflow:hidden}
+.bar i{display:block;height:100%;border-radius:4px;background:linear-gradient(90deg,#7a6236,var(--gold));transition:width .5s}
+.bar.hp i{background:linear-gradient(90deg,#4a6e5e,#7fae95)}
+.bar.hp.danger i{background:linear-gradient(90deg,#7a3a30,var(--red))}
+#strow{display:flex;gap:6px;padding:6px 16px 2px;flex-wrap:wrap}
+.st{flex:1;min-width:60px;background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:5px 4px;text-align:center}
+.st b{display:block;font-size:15px;color:var(--gold2)}
+.st span{font-size:10px;color:var(--dim);letter-spacing:1px}
+#stchips{padding:4px 16px;min-height:6px}
+#stchips .chip{font-size:11px;padding:2px 9px}
+#card-wrap{flex:1;min-height:200px;display:flex;flex-direction:column;justify-content:flex-start}
+.ev-tag{position:absolute;top:-9px;left:14px;background:var(--bg);padding:1px 10px;
+  font-size:11px;letter-spacing:2px;border-radius:10px}
+#ev-title{font-size:18px;font-weight:600;letter-spacing:2px;color:var(--gold2);margin-bottom:8px}
+#ev-text{font-size:14.5px;line-height:1.95;color:#c9c2b0}
+#ev-loc{font-size:11px;color:#6a6557;margin-top:10px;letter-spacing:1px}
+.ev-art{height:150px;border-radius:8px;margin-bottom:12px}
+.ev-art.art-fb span{font-size:40px}
+#ev-choices{margin-top:14px;display:flex;flex-direction:column;gap:9px}
+.choice{width:100%;text-align:left;padding:11px 14px;border:1px solid var(--line);
+  background:var(--panel2);color:var(--tx);border-radius:8px;font-size:14px;cursor:pointer;
+  font-family:inherit;transition:.15s;line-height:1.5}
+.choice:not(:disabled):hover{border-color:#6b5a35}
+.choice:active{transform:scale(.98)}
+.choice:disabled{opacity:.4;cursor:not-allowed}
+.choice .req{display:block;font-size:11px;color:var(--dim);margin-top:2px}
+#acts{display:grid;grid-template-columns:1fr 1fr;gap:10px;padding:8px 16px 20px}
+#acts .btn{padding:14px}
+#acts .btn small{display:block;font-size:10.5px;color:var(--dim);letter-spacing:1px;margin-top:3px;font-weight:400}
+.res-mark{font-size:13px;color:var(--gold);letter-spacing:3px;margin-bottom:6px}
+.g{color:var(--gold2)}
+.rd{color:#dd8a80}
+.gr{color:#8fbf9f}
+.bl2{color:#8fb8d8}
+
+/* 结算页 */
+#scr-end{padding:20px 0 40px}
+#end-cause{text-align:center;font-size:13px;color:var(--dim);letter-spacing:4px;margin-bottom:4px}
+#end-name{text-align:center;font-size:30px;font-weight:900;letter-spacing:6px;color:var(--gold2)}
+#end-art{height:170px;margin:14px 14px 4px;border-radius:10px}
+#bio{font-size:14px;line-height:2.1;color:#c4bda9;margin:12px 14px;text-align:justify}
+#end-stats{display:flex;gap:8px;margin:4px 14px}
+#end-stats .st b{color:var(--gold2)}
+#end-dao{text-align:center;margin:16px 0 6px;font-size:14px;color:var(--dim);letter-spacing:2px}
+#end-dao b{font-size:30px;color:var(--gold2);margin:0 6px;font-weight:900}
+#end-btns{margin:14px 14px 0;display:flex;gap:10px}
+
+/* 商店 */
+#scr-shop{padding:18px 0 40px}
+#shop-hd{text-align:center;margin-bottom:4px}
+#shop-hd h2{font-size:24px;letter-spacing:6px;color:var(--gold2)}
+#shop-hd p{color:var(--dim);font-size:12px;margin-top:4px;letter-spacing:2px}
+#shop-bal{text-align:center;margin:12px 0;font-size:14px;color:var(--dim)}
+#shop-bal b{font-size:24px;color:var(--gold2);margin-left:6px;font-weight:900}
+#tal-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin:0 14px}
+.tal{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:12px;position:relative}
+.tal b{color:var(--gold2);font-size:15px;letter-spacing:1px}
+.tal p{font-size:12px;color:var(--dim);margin-top:5px;line-height:1.7;min-height:40px}
+.tal .cost{margin-top:8px;font-size:12px;color:var(--gold)}
+.tal.owned{border-color:#4a5f45;background:linear-gradient(160deg,#15201a,#101711)}
+.tal.owned .cost{color:#7fae95}
+#shop-go{margin:18px 14px 0}
+
+/* 弹层 */
+#modal{position:fixed;inset:0;background:rgba(5,7,9,.75);display:none;z-index:50;
+  align-items:flex-end;justify-content:center;backdrop-filter:blur(2px)}
+#modal.on{display:flex}
+.m-box{background:var(--panel);border:1px solid var(--line);border-radius:14px 14px 0 0;
+  width:100%;max-width:560px;max-height:82vh;overflow-y:auto;padding:18px 16px 26px}
+.m-hd{display:flex;justify-content:space-between;align-items:center;margin-bottom:12px;
+  position:sticky;top:-18px;background:var(--panel);padding-top:2px;z-index:2}
+.m-hd b{font-size:17px;letter-spacing:3px;color:var(--gold2)}
+.m-x{background:none;border:1px solid var(--line);color:var(--dim);width:30px;height:30px;
+  border-radius:8px;cursor:pointer;font-family:inherit}
+.m-sec{margin:14px 0 6px;font-size:12px;color:var(--gold);letter-spacing:3px;
+  border-bottom:1px dashed #2a313a;padding-bottom:6px}
+.shop-item{display:flex;justify-content:space-between;align-items:center;gap:10px;
+  padding:10px 0;border-bottom:1px dashed #20262e}
+.shop-item .si{flex:1}
+.shop-item .si b{font-size:14px;color:var(--tx)}
+.shop-item .si p{font-size:11.5px;color:var(--dim);margin-top:2px}
+.shop-item .btn{flex:none;width:auto;padding:6px 13px;font-size:12px}
+.gongfa-item{padding:9px 0;border-bottom:1px dashed #20262e;font-size:13px}
+.gongfa-item b{color:var(--gold2)}
+.gongfa-item p{color:var(--dim);font-size:11.5px;margin-top:2px}
+.tl-item{display:flex;gap:10px;padding:6px 0;font-size:13px;border-bottom:1px dashed #1c2229}
+.tl-item em{font-style:normal;color:var(--gold);flex:none;width:38px;text-align:right}
+.hist-item{padding:9px 0;border-bottom:1px dashed #1c2229}
+.hist-hd{display:flex;align-items:center;gap:8px;font-size:13.5px}
+.hist-hd em{font-style:normal;color:var(--gold);flex:none}
+.hist-hd .chip{margin:0;font-size:10px;padding:1px 8px}
+.hist-c{font-size:11.5px;color:var(--dim);margin-top:3px}
+.hist-x{font-size:12.5px;color:#b5ae9c;margin-top:4px;line-height:1.85}
+.danger-zone{margin-top:18px;text-align:center}
+#toast{position:fixed;top:16%;left:50%;transform:translateX(-50%);background:rgba(18,22,27,.95);
+  border:1px solid #6b5a35;color:var(--gold2);padding:10px 22px;border-radius:8px;font-size:14px;
+  letter-spacing:2px;z-index:99;display:none;box-shadow:0 4px 20px rgba(0,0,0,.6)}
+</style>
+</head>
+<body>
+<div id="app">
+
+  <!-- 标题 -->
+  <div class="scr" id="scr-title">
+    <div id="title-art" class="art"></div>
+    <div id="title-box">
+      <span class="seal">輪迴</span>
+      <h1>百世登仙</h1>
+      <div class="sub">一世一轮回 · 百世证长生</div>
+      <div id="title-btns">
+        <button class="btn gold" id="btn-new">入 世</button>
+        <button class="btn" id="btn-cont" style="display:none">继 续 此 劫</button>
+      </div>
+      <div id="title-foot">灵感致敬文字轮回修仙品类 · 配图由 AI 生成</div>
+    </div>
+  </div>
+
+  <!-- 开局 -->
+  <div class="scr" id="scr-roll">
+    <div id="roll-sub">—— 第 <span id="roll-world">1</span> 世 · 天命初定 ——</div>
+    <div id="roll-name"></div>
+    <div id="roll-sub2" style="text-align:center;font-size:11px;color:#5c584c;letter-spacing:2px">此身此命，皆是随机，不服？改签。</div>
+    <div class="rgrid">
+      <div class="card">
+        <div id="roll-art" class="art" style="height:130px;border-radius:8px"></div>
+        <div class="olabel" style="margin-top:8px">出身</div>
+        <div id="roll-origin" style="font-size:15px;color:var(--gold2)"></div>
+        <div id="roll-origind" style="font-size:12px;color:var(--dim);margin-top:4px;line-height:1.7"></div>
+      </div>
+      <div class="card">
+        <div class="olabel">灵根</div>
+        <div id="roll-lg" style="font-size:15px"></div>
+        <div id="roll-lgd" style="font-size:12px;color:var(--dim);margin-top:4px;line-height:1.7"></div>
+        <div class="olabel" style="margin-top:12px">寿元</div>
+        <div id="roll-life" style="font-size:15px;color:var(--teal)"></div>
+      </div>
+    </div>
+    <div id="roll-fates" class="card"></div>
+    <div id="roll-tal"></div>
+    <div id="roll-btns">
+      <button class="btn ghost" id="btn-reroll"></button>
+      <button class="btn gold" id="btn-start">此为天命 · 入世</button>
+    </div>
+  </div>
+
+  <!-- 主界面 -->
+  <div class="scr" id="scr-main">
+    <div id="hdr">
+      <div class="who"><span id="h-name"></span><em id="h-realm"></em><span class="world" id="h-world"></span></div>
+      <button id="btn-info">☰</button>
+    </div>
+    <div id="bars">
+      <div class="brow"><span class="bl">寿元</span><div class="bar hp" id="bar-life"><i></i></div><span id="life-txt"></span></div>
+      <div class="brow"><span class="bl">修为</span><div class="bar" id="bar-exp"><i></i></div><span id="exp-txt"></span></div>
+    </div>
+    <div id="strow"></div>
+    <div id="stchips"></div>
+    <div id="card-wrap"></div>
+    <div id="acts"></div>
+  </div>
+
+  <!-- 结算 -->
+  <div class="scr" id="scr-end">
+    <div id="end-cause"></div>
+    <div id="end-name"></div>
+    <div id="end-art" class="art"></div>
+    <div id="bio"></div>
+    <div id="end-stats"></div>
+    <div id="end-dao"></div>
+    <div id="end-btns"><button class="btn gold" id="btn-shop">入轮回 · 点化天赋</button></div>
+  </div>
+
+  <!-- 天赋商店 -->
+  <div class="scr" id="scr-shop">
+    <div id="shop-hd"><h2>轮 回 点 化</h2><p>以毕生道韵，铸来世之基 —— 天赋永随，生生不灭</p></div>
+    <div id="shop-bal"></div>
+    <div id="tal-grid"></div>
+    <div id="shop-go"><button class="btn gold" id="btn-reinc">转 世 重 修</button></div>
+  </div>
+
+  <div id="modal"><div class="m-box" id="m-box"></div></div>
+  <div id="toast"></div>
+</div>
+<script>
+/* ================= 百世登仙 · 数据层 ================= */
+'use strict';
+var $=function(id){return document.getElementById(id)};
+function R(a,b){return a+Math.floor(Math.random()*(b-a+1))}
+function pick(a){return a[Math.floor(Math.random()*a.length)]}
+function ck(p){return Math.random()*100<p}
+function clamp(v,a,b){return Math.max(a,Math.min(b,v))}
+function G(t){return '<span class="g">'+t+'</span>'}
+function Rd(t){return '<span class="rd">'+t+'</span>'}
+function Gr(t){return '<span class="gr">'+t+'</span>'}
+function Bl(t){return '<span class="bl2">'+t+'</span>'}
+
+var REALMS=[
+ {n:'凡人',need:60,life:0,base:95,desc:'芸芸众生，尚未叩开仙门'},
+ {n:'练气',need:180,life:20,base:85,desc:'引气入体，寿元稍长'},
+ {n:'筑基',need:500,life:40,base:75,desc:'筑下道基，方为真修'},
+ {n:'金丹',need:900,life:80,base:62,desc:'丹成一线，可称真人'},
+ {n:'元婴',need:1600,life:150,base:52,desc:'元婴不灭，夺舍重生'},
+ {n:'化神',need:3000,life:300,base:44,desc:'神游太虚，言出法随'},
+ {n:'炼虚',need:5500,life:500,base:36,desc:'炼虚合道，移山填海'},
+ {n:'合体',need:10000,life:800,base:30,desc:'法体同辉，寿逾千载'},
+ {n:'大乘',need:18000,life:1200,base:24,desc:'大乘之境，陆地神仙'},
+ {n:'渡劫',need:30000,life:1600,base:13,desc:'九霄雷劫，一步登仙'}
+];
+
+var ORIGINS=[
+ {id:'shijia',n:'世家子弟',d:'生于修仙世家，丹药功法不缺，族人皆是修士。',bones:1,stones:500},
+ {id:'liehu',n:'山村猎户',d:'猎户之子，筋骨强健，自幼与山林猛兽周旋。',bones:2,maxAge:5},
+ {id:'shuxiang',n:'书香门第',d:'耕读传家，自幼博览群书，一点即通。',wuxing:2,stones:60},
+ {id:'shangjia',n:'商贾之家',d:'家中通商南北，金银流水一般，只是身子骨弱些。',stones:800,bones:-1},
+ {id:'huangzi',n:'落魄皇子',d:'前朝余孽，隐姓埋名。气运加身，却也仇家暗伏。',qiyun:2,stones:300,flag:'choujia'},
+ {id:'sanren',n:'山野散人',d:'采药为生，常遇云游修士，仙缘不俗。',qiyun:1,flag:'sanren'},
+ {id:'moyi',n:'魔道遗孤',d:'魔门覆灭之夜的唯一幸存者，功法邪异，正道侧目。',bones:1,daoxin:-1,flag:'mo'},
+ {id:'jiangmen',n:'将门之后',d:'将门虎子，弓马娴熟，心志坚毅，唯于经义一途平平。',bones:1,daoxin:1,wuxing:-1,stones:150}
+];
+
+var LINGGEN=[
+ {n:'废灵根',d:'灵窍淤塞，修炼事倍功半。',m:0.45,w:10,c:'#8a8a8a'},
+ {n:'伪灵根',d:'驳杂不纯，进境缓慢。',m:0.7,w:28,c:'#9aa5b1'},
+ {n:'真灵根',d:'端正纯净，修行正途。',m:1,w:40,c:'#7fb069'},
+ {n:'天灵根',d:'天生道体之姿，百年难遇。',m:1.5,w:17,c:'#4a9fd8'},
+ {n:'混沌灵根',d:'混沌未开，万象归一。万年不出一人。',m:2.4,w:4,c:'#b8860b'}
+];
+
+var FATES=[
+ {id:'tiansha',n:'天煞孤星',d:'悟性绝伦，然克尽亲近之人。',wuxing:2,flag:'gusha',w:8},
+ {id:'duanming',n:'短命之相',d:'寿数不长，修行却如有神助。',maxAge:-15,expB:0.3,w:8},
+ {id:'fugui',n:'富贵命格',d:'财星高照，一生不缺灵石。',stones:200,flag:'caiyun',w:10},
+ {id:'jianchi',n:'剑痴',d:'生而为剑，武技通神。',flag:'jianchi',w:8},
+ {id:'foGu',n:'佛骨禅心',d:'六根清净，心境澄明，只是修行不急。',daoxin:2,maxAge:10,expB:-0.1,w:8},
+ {id:'hongluan',n:'红鸾星动',d:'情缘早至，命中多遇有缘人。',flag:'hongluan',w:9},
+ {id:'longZi',n:'龙章凤姿',d:'天生贵气，诸事皆宜，也惹人嫉恨。',all:1,flag:'choujia',w:5},
+ {id:'meiyun',n:'时乖运蹇',d:'霉运缠身，然天无绝人之路。',qiyun:-3,flag:'buChang',w:7},
+ {id:'yaoguan',n:'药罐子',d:'体弱多病，却因久病成医，丹药于你格外有效。',bones:-2,flag:'danXiao',w:8},
+ {id:'wuyu',n:'无欲无求',d:'心如止水，修行自成，只是情之一字与你无缘。',daoxin:1,expB:0.15,flag:'wuYu',w:7},
+ {id:'moGu',n:'天生魔骨',d:'骨相奇特，魔功于你如臂使指。',flag:'moGu',w:6},
+ {id:'guixu',n:'归墟道体',d:'每破一境，寿元额外大增，天道另眼相看。',flag:'guixu',w:3}
+];
+
+var TALENTS=[
+ {id:'daoti',n:'道体天成',d:'修为获取速度+25%。',cost:8},
+ {id:'huigen',n:'慧根深种',d:'悟性+2。',cost:6},
+ {id:'guxiang',n:'骨相清奇',d:'根骨+2。',cost:6},
+ {id:'fuyuan',n:'福缘深厚',d:'气运+2。',cost:5},
+ {id:'panshi',n:'道心如磐',d:'道心+2。',cost:5},
+ {id:'guixi',n:'龟息绵长',d:'寿元+15。',cost:4},
+ {id:'shengcai',n:'生财有道',d:'开局灵石+400。',cost:3},
+ {id:'jianxin',n:'剑心通明',d:'战力+8，剑意傍身。',cost:7},
+ {id:'danxiang',n:'丹香透骨',d:'丹药效果+50%。',cost:5},
+ {id:'xianyuan',n:'仙缘牵引',d:'奇遇类事件频发。',cost:8},
+ {id:'guiJi',n:'轮回不昧',d:'每世圆寂，额外+2道韵。',cost:6},
+ {id:'guiZu',n:'贵胄遗泽',d:'开局即有练气修为。',cost:7},
+ {id:'shuangXiu',n:'双修之体',d:'若有道侣，修为获取+30%。',cost:5},
+ {id:'tianMing',n:'天命所归',d:'突破成功率+5%。',cost:9}
+];
+
+var SECTS=[
+ {id:'qingyun',n:'青云剑宗',d:'天下剑修之首，御剑万里，斩妖除魔。',style:'剑修 · 刚猛',g:[
+   {id:'qingyunJian',n:'青云剑诀',d:'战力+6，修为+10%',cost:250,fee:300,pw:6,expB:0.1},
+   {id:'yufeng',n:'御风剑意',d:'战力+4，突破+5%',cost:550,fee:600,pw:4,brk:5}]},
+ {id:'taixu',n:'太虚道宗',d:'道门玄宗，参悟天机，气度冲虚。',style:'道法 · 均衡',g:[
+   {id:'taixuYin',n:'太虚引气诀',d:'修为获取+25%',cost:200,fee:250,expB:0.25},
+   {id:'zhoutian',n:'周天星辰录',d:'悟性+1，修为+15%',cost:600,fee:650,wuxing:1,expB:0.15}]},
+ {id:'wanfo',n:'万佛寺',d:'晨钟暮鼓，普度众生。需道心澄澈者方可入门。',style:'佛门 · 守御',reqDx:6,g:[
+   {id:'fanyin',n:'梵音洗心经',d:'道心+2，寿元+10',cost:200,fee:250,daoxin:2,life:10},
+   {id:'mingwang',n:'不动明王体',d:'根骨+2，战力+4',cost:550,fee:600,bones:2,pw:4}]},
+ {id:'xuanyin',n:'玄阴宫',d:'魔道巨擘，功法诡谲，进境奇速，代价自付。',style:'魔道 · 激进',g:[
+   {id:'xuanyinDuo',n:'玄阴夺魄功',d:'修为+40%，突破时道心-1',cost:250,fee:300,expB:0.4,side:1},
+   {id:'xueying',n:'血影鞭法',d:'战力+7',cost:500,fee:550,pw:7}]},
+ {id:'danding',n:'丹鼎门',d:'炼丹圣地，丹药八折，财源广进。',style:'丹道 · 富足',g:[
+   {id:'jiuzhuan',n:'九转丹经',d:'丹药效果+40%，坊市丹药八折',cost:300,fee:350,pill:0.4},
+   {id:'xuanhu',n:'悬壶济世方',d:'宗门任务灵石收益大增',cost:500,fee:550,xh:1}]}
+];
+var GONGFA={};SECTS.forEach(function(st){st.g.forEach(function(g){g.sect=st.id;GONGFA[g.id]=g})});
+
+var FBTIER=['','凡品','灵品','宝品','极品','仙品'];
+var FBNAMES=[null,
+ ['精铁重剑','护身玉符','赤铜铃'],
+ ['青虹剑','貔貅玉佩','流云梭'],
+ ['诛邪剑','山河扇','紫雷印'],
+ ['沧溟珠','星陨弓','焚天鼎'],
+ ['太虚镜','弑仙枪','昆仑玺']];
+
+var PILLS=[
+ {id:'juqi',n:'聚气丹',d:'立得八年修为',cost:80,need:1},
+ {id:'pjing',n:'破境丹',d:'下次突破+15%（限存1枚）',cost:300,need:2},
+ {id:'yanshou',n:'延寿丹',d:'寿元+8（每世限3颗）',cost:500,need:2},
+ {id:'liao',n:'疗伤药',d:'清除重伤状态',cost:100,need:1},
+ {id:'xisui',n:'洗髓丹',d:'根骨+1（每世限2颗）',cost:800,need:3}
+];
+
+var XING=['林','苏','叶','沈','顾','萧','陆','秦','洛','云','白','江','宋','楚','祁','岑'];
+var MING=['尘','川','砚','舟','野','行歌','未晚','青临','晚棠','昭','既明','望舒','知非','亦寒','观澜','问天','栖迟','拂雪','孤鸿','听澜','步崖','衔月','辞秋','枕山'];
+var NPC_X=['云','苏','洛','白','叶','秦','沈','慕','温','顾'];
+var NPC_M=['霜','雪','岚','歌','瑶','璃','清越','疏影','拂衣','寒烟','朝雨','暗香'];
+var NPC_TR=['剑修','丹师','乐师','医师','散修','琴姬','书生','女侠','游侠','道人'];
+
+var TAGC={'奇遇':'gold','危机':'red','人情':'teal','道心':'purple','情缘':'pink','宗门':'bl2','天下':'red','轮回':'gold'};
+
+/* ================= 事件库 ================= */
+var EV=[];
+function E(id,tag,w,min,cond,t,x,c){EV.push({id:id,tag:tag,w:w,min:min||0,cond:cond||null,t:t,x:x,c:c})}
+function gs(s,n){if(n>0&&f(s,'caiyun'))n=Math.round(n*1.5);s.stones=Math.max(0,s.stones+n)}
+function gx(s,n){s.exp+=Math.round(n*expMult(s)*(1+s.realm*0.45))}
+function stAdd(s,k,n){s[k]=clamp(s[k]+n,1,15)}
+function lifA(s,n){s.maxAge+=n}
+function hurt(s,y){s.st.push({n:'重伤',y:y||3})}
+function xinmo(s,y){s.st.push({n:'心魔',y:y||6})}
+function wudao(s,y){s.st.push({n:'悟道',y:y||5})}
+function logT(s,t){s.tl.push({a:s.age,t:t})}
+function histPush(s,h){if(!s.hist)s.hist=[];s.hist.push(h);if(s.hist.length>150)s.hist.shift()}
+function fight(s,need,win,lose){
+  var p=pw(s)+R(0,8);
+  if(p>=need){return win()} hurt(s); return lose();
+}
+function f(s,id){return s.fl.indexOf(id)>=0}
+function tal(id){return M.tal.indexOf(id)>=0}
+
+function giveFabao(s,tier){
+  var t=clamp(tier,1,5);
+  if(s.fabao){s.fabao.tier=clamp(Math.max(t,s.fabao.tier+1),1,5)}
+  else s.fabao={n:pick(FBNAMES[t]),tier:t};
+  logT(s,'得法宝「'+s.fabao.n+'」('+FBTIER[s.fabao.tier]+')');
+  return s.fabao;
+}
+function randGongfa(s){
+  var cand=Object.keys(GONGFA).filter(function(g){return s.gongfa.indexOf(g)<0});
+  if(!cand.length)return null;
+  var gid=pick(cand); s.gongfa.push(gid); logT(s,'习得《'+GONGFA[gid].n+'》'); return GONGFA[gid];
+}
+/* ---- 奇遇 ---- */
+E('e_gudong','奇遇',7,0,null,'山中古洞',
+ '深山采药，忽见崖壁之后隐有洞府轮廓，禁制衰败欲绝，内里幽深难测。',
+ [
+  {t:'入内探查',f:function(s){
+    if(ck(38+s.qiyun*3)){var n=R(150,400);gs(s,n);gx(s,120);
+      return '洞中枯坐着一具前人遗蜕，掌中蒲团下压着储物袋。<br>'+G('灵石+'+n+'，修为+120');}
+    if(ck(50)){wudao(s);return '洞府空空，唯壁上残留一行剑痕，你观之忘我，竟有所悟。<br>'+G('进入悟道状态');}
+    hurt(s);return '脚下骤然塌陷，残阵轰然发动！你狼狈逃出，后怕不已。<br>'+Rd('身负重伤');}},
+  {t:'先以神识探查',f:function(s){
+    if(ck(30+s.wuxing*4)){gx(s,200);return '神识探得壁中夹层，藏有半卷功法心得。<br>'+G('修为+200');}
+    return '神识所及尽是空荡尘埃，早年已被搜刮干净。<br>你摇头而返。';}},
+  {t:'封洞标记',f:function(s){gs(s,30);return '你以石块封洞，刻下标记，来日备足手段再来。<br>'+G('倒卖洞府位置，灵石+30');}},
+  {t:'转身离去',f:function(s){stAdd(s,'daoxin',1);return '福地自有机缘人，不贪不占，心自安然。<br>'+G('道心+1');}},
+  {t:'邀同门结伴共探',req:function(s){return !!s.sect},f:function(s){
+    var n=R(150,300);gs(s,n);s.contrib+=30;
+    return '同门结伴，禁制虽发却被联手破去。风险共担，收益均分，宗门也记了你一笔。<br>'+G('灵石+'+n+'，贡献+30');}}
+ ]);
+E('e_yujian','奇遇',6,0,null,'残破玉简',
+ '市集地摊上，一枚残破玉简混在杂物之中，隐有灵光流转。',
+ [
+  {t:'盘膝参悟',f:function(s){
+    if(ck(35+s.wuxing*4)){stAdd(s,'wuxing',1);gx(s,150);return '玉简中所载乃一门呼吸吐纳的法门，你触类旁通。<br>'+G('悟性+1，修为+150');}
+    gx(s,50);return '玉简残缺过半，你苦参半日，只得皮毛。<br>'+G('修为+50');}},
+  {t:'倒卖识货人',f:function(s){gs(s,250);return '你寻到一位古玩修士，他如获至宝，当场付账。<br>'+G('灵石+250');}},
+  {t:'献给宗门',req:function(s){return !!s.sect},rt:'需先拜入宗门',f:function(s){
+    s.contrib+=200;gs(s,100);return '长老抚须赞叹，记你一功。<br>'+G('贡献+200，灵石+100');}},
+  {t:'供于案头',f:function(s){stAdd(s,'daoxin',1);return '前人心血，虽残犹珍。你焚香供之，日日观想。<br>'+G('道心+1');}},
+  {t:'以剑意温养之',req:function(s){return f(s,'jianchi')||tal('jianxin')},f:function(s){
+    stAdd(s,'wuxing',1);gx(s,200);
+    return '你以剑意徐徐温养残简，暗淡的字迹竟重新亮起——剑心通明者，才读得懂前人残卷。<br>'+G('悟性+1，修为+200');}}
+ ]);
+E('e_lingquan','奇遇',5,0,null,'荒谷灵泉',
+ '追寻兽迹误入荒谷，谷底一泓清泉泛着莹莹微光，寒气沁骨。',
+ [
+  {t:'入泉淬体',f:function(s){stAdd(s,'bones',1);lifA(s,2);return '泉底寒流冲刷经脉，涤去杂质。<br>'+G('根骨+1，寿元+2');}},
+  {t:'携泉归家',f:function(s){gs(s,180);return '你以玉桶汲水，卖给城中炼丹师，够买半年口粮。<br>'+G('灵石+180');}},
+  {t:'让给老者',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '泉边一位重伤老者命悬一线，你默然让开。他深深看你一眼，蹒跚而去。<br>'+G('道心+1，气运+1');}},
+  {t:'痛痛快快洗个澡',f:function(s){return '你脱了个精光跳进去，除了浑身清凉，什么也没发生。<br>……心情倒是不错。';}},
+  {t:'引全村共饮',req:function(s){return s.daoxin>=8},f:function(s){
+    gs(s,-60);stAdd(s,'daoxin',2);logT(s,'引灵泉济一村');
+    return '你出钱修渠，把泉水引进村里。病者渐愈，村人在村口为你立了块功德碑。<br>'+G('道心+2，声名远播');}}
+ ]);
+E('e_xianfu','奇遇',4,1,function(s){return !s.fabao||s.fabao.tier<5},'无名仙府',
+ '云雾散处，一座小型仙府自山腹中显露，府门虚掩，宝光隐现。',
+ [
+  {t:'直取法宝',f:function(s){
+    if(ck(45+s.qiyun*3)){var fb=giveFabao(s,R(1,4));return '府中剑架之上，'+fb.n+'似有灵性，见你而来，嗡鸣不休。<br>'+G('获得法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'）');}
+    hurt(s);return '你的手刚触到剑架，满府禁制轰然反噬！<br>'+Rd('身负重伤');}},
+  {t:'只取丹药',f:function(s){gs(s,400);gx(s,150);return '丹房中玉瓶犹封，药香扑鼻。你不贪多，取之即走。<br>'+G('灵石+400，修为+150');}},
+  {t:'参悟功法',f:function(s){var g=randGongfa(s);
+    if(g)return '石壁上刻着一部功法总纲，你默记于心。<br>'+G('习得《'+g.n+'》');
+    gx(s,250);return '你于府中盘桓三日，融会贯通己身所学。<br>'+G('修为+250');}},
+  {t:'全都要',f:function(s){
+    if(ck(20+s.daoxin*4)){var fb=giveFabao(s,R(1,3));gs(s,300);var g=randGongfa(s);
+      return '你气度沉凝，府中残灵俯首认主，尽纳宝物。<br>'+G('法宝「'+fb.n+'」+ 灵石+300'+(g?' + 习得《'+g.n+'》':''));}
+    hurt(s);gs(s,-200);return '贪念一起，满府禁制齐鸣！你夺路而逃，损失惨重。<br>'+Rd('身负重伤，灵石-200');}},
+  {t:'以魔血叩门',req:function(s){return f(s,'mo')||f(s,'moGu')},f:function(s){
+    var fb=giveFabao(s,R(3,4));stAdd(s,'daoxin',-1);
+    return '你割掌以血画符。府中残灵嗅到魔气，尽皆俯首，任你携宝而去——魔道手段，有时就是好用。<br>'+G('法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'）')+Rd('，道心-1');}}
+ ]);
+E('e_laozhe','奇遇',5,0,null,'垂死老者',
+ '官道旁，一位老者气若游丝，胸口插着半截断剑，死死盯着你。',
+ [
+  {t:'出手相救',req:function(s){return s.stones>=100},rt:'需灵石100',f:function(s){
+    gs(s,-100);if(ck(55+s.daoxin*2)){stAdd(s,'wuxing',1);gx(s,400);logT(s,'救下神秘老者，得其传功');
+      return '你耗尽家财为他续命。三日后他伤愈，传了你一门精妙法诀，飘然而去。<br>'+G('悟性+1，修为+400');}
+    stAdd(s,'daoxin',1);return '你尽力了，老者终究伤重不治。他临终握着你的手，眼中有光。<br>'+G('道心+1');}},
+  {t:'报官收殓',f:function(s){gs(s,80);return '你报了官，官府赏了笔殓葬钱。<br>'+G('灵石+80');}},
+  {t:'顺走他的东西',f:function(s){gs(s,150);stAdd(s,'daoxin',-2);return '你摸走了他怀中的钱袋。他浑浊的眼死死盯着你，直到咽气。<br>'+Rd('灵石+150，道心-2');}},
+  {t:'绕道而行',f:function(s){return '江湖险恶，多一事不如少一事。<br>你低着头快步走远了。';}}
+ ]);
+E('e_yantie','奇遇',4,0,null,'天外陨铁',
+ '一夜雷鸣，晨起时村外焦土上嵌着一块黑铁，寒气逼人，隐隐有星辉。',
+ [
+  {t:'炼入本命法宝',req:function(s){return !!s.fabao},rt:'需已有法宝',f:function(s){
+    s.fabao.tier=clamp(s.fabao.tier+1,1,5);logT(s,'陨铁淬炼「'+s.fabao.n+'」');
+    return '陨铁熔入法宝，宝光大盛，似要破空而去。<br>'+G('「'+s.fabao.n+'」升至'+FBTIER[s.fabao.tier]);}},
+  {t:'卖与铸剑师',f:function(s){gs(s,400);return '铸剑师捧着陨铁手都在抖，当场掏空了钱柜。<br>'+G('灵石+400');}},
+  {t:'请人铸剑',req:function(s){return f(s,'jianchi')||tal('jianxin')},rt:'需剑痴或剑心天赋',f:function(s){
+    s.fabao={n:pick(FBNAMES[3]),tier:3};logT(s,'以陨铁铸成「'+s.fabao.n+'」');
+    return '七七四十九日炉火不熄，出炉那一刻，剑吟如龙。<br>'+G('获得法宝「'+s.fabao.n+'」（宝品）');}},
+  {t:'献给官府',f:function(s){gs(s,500);return '县太爷大喜，赏了你一笔巨款，还赏了个"义民"匾。<br>'+G('灵石+500');}}
+ ]);
+E('e_jianzhong','奇遇',4,1,null,'古剑冢',
+ '荒山中遍布断剑残锋，最深处一柄古剑倒插土中，剑鸣不绝，似在择主。',
+ [
+  {t:'拔剑认主',f:function(s){
+    if(ck(30+s.qiyun*3+(f(s,'jianchi')?25:0))){var fb=giveFabao(s,R(2,3));return '你握住剑柄，剑鸣骤停。<br>'+G('获得法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'）');}
+    hurt(s);return '你双臂发麻也拔不出分毫，反被剑气所伤。此剑与你无缘。<br>'+Rd('身负重伤');}},
+  {t:'静坐观剑',f:function(s){gx(s,250);if(f(s,'jianchi')||tal('jianxin')){stAdd(s,'wuxing',1);return '你坐观三日，万剑归宗之意在胸中成型。<br>'+G('修为+250，悟性+1');}
+    return '你坐观半日，隐有所得。<br>'+G('修为+250');}},
+  {t:'拾些残剑去卖',f:function(s){gs(s,220);return '断剑虽残，铁料仍是好铁料。<br>'+G('灵石+220');}}
+ ]);
+E('e_paimai','奇遇',5,2,function(s){return s.stones>=400},'坊市拍卖',
+ '城中拍卖行今日开拍，压轴之物宝光冲霄，满堂修士挤破头颅。',
+ [
+  {t:'竞拍古镜',req:function(s){return s.stones>=400},rt:'需灵石400',f:function(s){
+    gs(s,-400);var fb=giveFabao(s,3);return '你咬牙举牌，力压群雄。古镜入手温润生温。<br>'+G('获得法宝「'+fb.n+'」（宝品）');}},
+  {t:'竞拍丹方',req:function(s){return s.stones>=400},rt:'需灵石400',f:function(s){
+    gs(s,-400);s.pills.xisui=clamp(s.pills.xisui,0,1);stAdd(s,'bones',1);
+    return '你拍下一份洗髓丹方与两粒成药，服下后浑身浊物尽排。<br>'+G('根骨+1');}},
+  {t:'在拍卖行做工',f:function(s){gs(s,120);gx(s,60);return '你帮着搬运灵箱，顺便蹭听了不少行内见闻。<br>'+G('灵石+120，修为+60');}},
+  {t:'只看不买',f:function(s){gx(s,80);return '你挤在人群里看了个饱，眼界大开。<br>'+G('修为+80');}}
+ ]);
+E('e_lingzhi','奇遇',5,0,null,'野生灵植',
+ '崖缝间一株灵草迎风轻颤，叶片上凝着灵露，龙涎香气沁人心脾。',
+ [
+  {t:'小心采撷',f:function(s){
+    if(ck(30+s.wuxing*4)){gs(s,260);return '你以玉铲连土起出，根须无损，药商抢着要。<br>'+G('灵石+260');}
+    gs(s,80);return '手一抖碰断了主茎，药力十不存一。<br>'+G('灵石+80');}},
+  {t:'原地守护',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你搬石垒墙为它挡风，日日照看。不知怎的，你觉得心也静了。<br>'+G('道心+1，气运+1');}},
+  {t:'做记号改日再来',f:function(s){gs(s,60);return '你记下位置，转身把消息卖给采药行。<br>'+G('灵石+60');}}
+ ]);
+E('e_leimu','奇遇',4,0,null,'雷击之木',
+ '一颗古树遭天雷劈中而未死，焦黑树干中雷纹流转，噼啪作响。',
+ [
+  {t:'以身引雷淬体',f:function(s){
+    if(ck(35+s.bones*3)){stAdd(s,'bones',1);gx(s,120);return '雷流入体，你咬牙硬受了七道小雷，筋骨如铁。<br>'+G('根骨+1，修为+120');}
+    hurt(s);return '第八道雷落下时你终于没扛住，焦黑滚地。<br>'+Rd('身负重伤');}},
+  {t:'剥雷纹制符',f:function(s){gs(s,250);return '雷纹剥下制成三张雷符，坊市里抢手得很。<br>'+G('灵石+250');}},
+  {t:'炼雷入丹',f:function(s){s.pills.pjing=1;return '你以雷木为引炼出一炉破境丹。<br>'+G('获得破境丹');}}
+ ]);
+E('e_zuiXian','奇遇',4,0,null,'醉卧仙人',
+ '破庙里躺着个邋遢醉汉，酒气冲天，可你分明看见他打了个酒嗝，梁上灰尘齐齐落下。',
+ [
+  {t:'请他喝酒',req:function(s){return s.stones>=80},rt:'需灵石80',f:function(s){
+    gs(s,-80);stAdd(s,'wuxing',1);gx(s,200);
+    return '你买了坛好酒。他喝了三天，说了些颠三倒四的话，你却听得如痴如醉。<br>'+G('悟性+1，修为+200');}},
+  {t:'席地听道',f:function(s){gx(s,120);return '他絮絮叨叨讲了一夜"水往低处流"的大道理。<br>奇怪的是，你竟觉得受益匪浅。'+G('修为+120');}},
+  {t:'施舍铜钱',req:function(s){return s.stones>=50},rt:'需灵石50',f:function(s){
+    gs(s,-50);stAdd(s,'qiyun',1);return '你把仅有的几枚铜钱放在他碗边。他半睁眼笑了笑："好孩子。"<br>'+G('气运+1');}},
+  {t:'绕过这个醉鬼',f:function(s){return '多半是哪来的疯子。<br>你屏住呼吸快步走出破庙。';}}
+ ]);
+E('e_kezi','奇遇',5,0,null,'石壁刻字',
+ '山道旁石壁上刻着两行字，笔画间剑气纵横："登仙无他途，唯死生间求之。"',
+ [
+  {t:'观想体悟',f:function(s){gx(s,150);if(ck(30+s.wuxing*3)){stAdd(s,'wuxing',1);return '你对着刻痕比划了整夜，忽有所悟。<br>'+G('修为+150，悟性+1');}
+    return '你揣摩良久，略有心得。<br>'+G('修为+150');}},
+  {t:'拓印卖钱',f:function(s){gs(s,180);return '拓片卖给收购碑帖的商行，他们当是前朝名家手笔。<br>'+G('灵石+180');}},
+  {t:'伸手抚痕',f:function(s){
+    if(ck(45)){gx(s,200);return '指尖触痕刹那，一股剑意顺臂而入，你冷静下来了。<br>'+G('修为+200');}
+    hurt(s);return '剑气反噬，指尖鲜血淋漓。<br>'+Rd('受了轻伤');}}
+ ]);
+E('e_lingchi2','奇遇',4,1,null,'山腹灵潭',
+ '山腹深处一汪灵潭，潭底灵石如繁星，雾气氤氲入体便化修为。',
+ [
+  {t:'入潭修行',f:function(s){gx(s,380);return '你盘膝潭心，周身灵气如百川归海。<br>'+G('修为+380');}},
+  {t:'捞灵石去卖',f:function(s){gs(s,300);return '你摸了七八块灵石上岸。潭水似乎浅了一寸，心里有点虚。<br>'+G('灵石+300');}},
+  {t:'引村人同浴',f:function(s){stAdd(s,'daoxin',2);return '你领着村里病弱的乡亲来此浸身。多人病愈，村口为你立了块长生碑。<br>'+G('道心+2');}}
+ ]);
+
+/* ---- 危机 ---- */
+E('e_shanzei','危机',7,0,null,'山贼劫道',
+ '树林里一声唿哨，七八个山贼围了上来，明晃晃的刀子架在你脖颈边。',
+ [
+  {t:'拔刀就战',f:function(s){return fight(s,12+s.realm*4,
+    function(){gs(s,200);logT(s,'力退山贼');return '你一个照面放翻三个，余贼抱头鼠窜。<br>'+G('缴获灵石+200');},
+    function(){gs(s,-150);return '寡不敌众，你被打得鼻青脸肿，钱袋也被搜走了。<br>'+Rd('灵石-150，身负重伤');});}},
+  {t:'破财消灾',f:function(s){gs(s,-200);return '钱袋递过去，贼头掂了掂，挥挥手放行。<br>'+Rd('灵石-200');}},
+  {t:'虚张声势',f:function(s){
+    if(ck(30+s.wuxing*4)){return '你报出一个宗门名号，又咳了两声吐出一口"血"。贼人们面面相觑，退了。';}
+    gs(s,-120);return '贼头冷笑："糊弄鬼呢？"挨了顿揍，丢了半袋钱。<br>'+Rd('灵石-120');}},
+  {t:'掉头就跑',f:function(s){
+    if(ck(35+s.qiyun*4))return '你钻进灌木密林，七拐八绕甩掉了追兵。';
+    hurt(s);return '一支冷箭擦着后背飞过。你带伤跑回了家。<br>'+Rd('身负重伤');}},
+  {t:'亮出宗门腰牌',req:function(s){return !!s.sect},f:function(s){
+    s.contrib-=20;gs(s,80);
+    return '腰牌一出，贼头脸色煞白："是、是自家人！有眼无珠！"<br>他们不但退了，还"孝敬"了些买路钱。'+G('贡献-20，灵石+80');}}
+ ]);
+E('e_yaoshou','危机',6,0,null,'妖兽袭村',
+ '一头独角妖狼闯进村中，血口大张，孩童哭喊声四起。',
+ [
+  {t:'挺身而出',f:function(s){return fight(s,15+s.realm*5,
+    function(){gs(s,300);stAdd(s,'daoxin',1);logT(s,'独斗妖狼护村');return '你与妖狼缠斗半日，终于一剑贯喉。全村人跪谢于道旁。<br>'+G('灵石+300，道心+1');},
+    function(){gs(s,-100);return '妖狼一爪把你拍飞。村中猎户赶到，才将它吓退。<br>'+Rd('身负重伤，灵石-100');});}},
+  {t:'鸣锣报信',f:function(s){stAdd(s,'daoxin',1);return '你敲响了村口警锣，青壮持械而动，妖狼见势遁走。<br>'+G('道心+1');}},
+  {t:'趁乱搜索妖巢',f:function(s){
+    if(ck(30+s.qiyun*3)){gs(s,250);return '你在妖狼巢穴里翻出些碎银和一枚兽牙。<br>'+G('灵石+250');}
+    stAdd(s,'daoxin',-2);return '你正翻着，妖狼回巢了。你屎尿齐流地逃了出来。<br>'+Rd('道心-2');}},
+  {t:'率猎户围猎',req:function(s){return s.bones>=7},f:function(s){return fight(s,8+s.realm*2,
+    function(){gs(s,320);stAdd(s,'daoxin',1);logT(s,'率众猎杀妖狼');return '你领着村中猎户布下陷阱，你一箭钉穿妖狼咽喉。铁打的身板，就是底气。<br>'+G('灵石+320，道心+1');},
+    function(){hurt(s);return '妖狼狡诈异常，反扑时伤了两人。你们拼死才将它赶走。<br>'+Rd('身负重伤');});}}
+ ]);
+E('e_eba','危机',5,0,null,'街头恶霸',
+ '市集上，几个恶霸围着一位卖炭老翁拳打脚踢，围观者敢怒不敢言。',
+ [
+  {t:'出手制服',f:function(s){return fight(s,13+s.realm*3,
+    function(){stAdd(s,'daoxin',1);gs(s,100);return '你三两下把恶霸捆成粽子送了官。老翁千恩万谢，塞给你一篮炭。<br>'+G('道心+1，灵石+100');},
+    function(){gs(s,-80);return '恶霸人多势众，你吃了亏，还被讹了汤药钱。<br>'+Rd('灵石-80，身负重伤');});}},
+  {t:'花钱平事',req:function(s){return s.stones>=150},rt:'需灵石150',f:function(s){
+    gs(s,-150);stAdd(s,'daoxin',1);return '你替老翁赔了"毁摊费"。恶霸掂着钱走了。<br>世道如此。'+G('道心+1');}},
+  {t:'忍气吞声',f:function(s){stAdd(s,'daoxin',-1);return '你低头快步走过。那一晚，炭火的味道让你翻来覆去睡不着。<br>'+Rd('道心-1');}},
+  {t:'悄悄报官',f:function(s){
+    if(ck(50)){gs(s,100);return '官差来得巧，正撞上恶霸行凶，当场锁拿。你得了份赏钱。<br>'+G('灵石+100');}
+    return '官差姗姗来迟，恶霸早跑了。老翁苦笑着谢你好意。';}}
+ ]);
+E('e_heidian','危机',5,1,null,'荒野黑店',
+ '前不着村后不着店，一家孤店灯火昏黄。掌柜笑得殷勤，你却瞥见他袖口的血渍。',
+ [
+  {t:'将计就计',f:function(s){
+    if(ck(35+s.wuxing*4)){gs(s,200);stAdd(s,'daoxin',-1);return '你假意吃下蒙汗药，趁他们抬你时暴起制住三人，反搜了他们的黑钱。<br>'+G('灵石+200，道心-1');}
+    hurt(s);gs(s,-100);return '你装醉露了马脚，被一顿好打，钱袋也被摸走了。<br>'+Rd('灵石-100，身负重伤');}},
+  {t:'滴酒不沾',f:function(s){return '你推说肠胃不适，只要了碗白水，坐着耗到天亮。<br>掌柜的脸一路黑到送客。';}},
+  {t:'掀桌开战',f:function(s){return fight(s,14+s.realm*4,
+    function(){gs(s,300);return '你一脚踹翻饭桌，刀光起处，掌柜跪地求饶。你抄了钱柜。<br>'+G('灵石+300');},
+    function(){gs(s,-150);return '店里有埋伏！你负伤杀出，狼狈不堪。<br>'+Rd('灵石-150，身负重伤');});}}
+ ]);
+E('e_zhang','危机',4,0,null,'瘴林迷雾',
+ '前方密林瘴气弥漫，隐见林中灵花遍地——寻常人看见了只当是海市。',
+ [
+  {t:'屏息硬闯',f:function(s){
+    if(ck(30+s.qiyun*3)){gs(s,320);return '你憋着气冲进冲出，怀里多了几株灵花。<br>'+G('灵石+320');}
+    hurt(s);return '瘴气入肺，你烧了三天三夜。<br>'+Rd('身负重伤');}},
+  {t:'服用避瘴丹',req:function(s){return s.stones>=80},rt:'需灵石80',f:function(s){
+    gs(s,-80);gs(s,250);return '丹丸护住心脉，你从容采撷灵花而归。<br>'+G('灵石+250');}},
+  {t:'绕路而行',f:function(s){gx(s,40);return '你多走了两日山路，途中倒也杂念全无。<br>'+G('修为+40');}}
+ ]);
+E('e_duanya','危机',4,0,null,'断崖灵芝',
+ '断崖半壁石台上生着一株九叶灵芝，崖下云海翻涌，深不见底。',
+ [
+  {t:'冒险攀崖',f:function(s){
+    if(ck(25+s.qiyun*4)){gs(s,350);return '你指尖抠着岩缝挪到石台，灵芝入手温热如玉。<br>'+G('灵石+350');}
+    hurt(s);return '半空里一块岩石松脱！你摔落在崖底软泥上，半日才爬起来。<br>'+Rd('身负重伤');}},
+  {t:'结绳而降',req:function(s){return s.stones>=50},rt:'需灵石50买绳索',f:function(s){
+    gs(s,-50);gs(s,200);return '绳索稳稳吊着你上下，灵芝完好到手。<br>'+G('灵石+200');}},
+  {t:'望崖而叹',f:function(s){stAdd(s,'daoxin',1);return '财帛动人心，性命价更高。<br>你长揖一礼，转身下山。'+G('道心+1');}}
+ ]);
+E('e_choujia','危机',6,0,function(s){return f(s,'choujia')},'仇家寻衅',
+ '巷口斜刺里杀出几个蒙面人，为首者冷笑："找了你好久。"',
+ [
+  {t:'拔剑死战',f:function(s){return fight(s,18+s.realm*6,
+    function(){gs(s,400);stAdd(s,'daoxin',1);logT(s,'力战仇家');return '你越战越勇，把他们尽数放倒。搜出的银票够花半年。<br>'+G('灵石+400，道心+1');},
+    function(){gs(s,-250);return '对方人多势众，你血战突围，伤得不轻。<br>'+Rd('灵石-250，身负重伤');});}},
+  {t:'易容遁走',f:function(s){
+    if(ck(35+s.qiyun*4))return '你提前从后巷溜走，混入赶集的人流。他们扑了个空。';
+    hurt(s);gs(s,-100);return '半路还是被堵住了。你丢下钱袋才得以脱身。<br>'+Rd('灵石-100，身负重伤');}},
+  {t:'托宗门调停',req:function(s){return !!s.sect},rt:'需先拜入宗门',f:function(s){
+    s.contrib-=100;return '宗门长老递了句话过去，蒙面人灰溜溜地散了。<br>'+Rd('贡献-100');}},
+  {t:'孤注一掷',f:function(s){
+    if(ck(15+s.daoxin*4)){gs(s,600);stAdd(s,'daoxin',2);return '你反客为主，奇袭擒下贼首！余众一哄而散。贼首怀中竟藏着厚厚一叠银票。<br>'+G('灵石+600，道心+2');}
+    hurt(s);gs(s,-300);return '你赌输了。被按在地上打了个半死，钱物被劫掠一空。<br>'+Rd('灵石-300，身负重伤');}},
+  {t:'动用旧部暗卫',req:function(s){return s.origin===4},f:function(s){
+    gs(s,300);stAdd(s,'daoxin',1);logT(s,'旧部寻仇，一朝了结');
+    return '你放出信号，蛰伏多年的暗卫如影而至。贼首首级悬于城门——旧日恩怨，一朝了结。<br>'+G('灵石+300，道心+1');}}
+ ]);
+E('e_wenyi','危机',4,0,null,'村中瘟疫',
+ '村里病倒了一片，家家闭户，郎中束手无策，哭声隐隐。',
+ [
+  {t:'散财施药',req:function(s){return s.stones>=150},rt:'需灵石150',f:function(s){
+    gs(s,-150);stAdd(s,'daoxin',2);stAdd(s,'qiyun',1);logT(s,'散药救疫');
+    return '你买来药材熬了大锅汤，挨家挨户去送。半个村的人都欠你一条命。<br>'+G('道心+2，气运+1');}},
+  {t:'闭门自保',f:function(s){return '你把门窗封死，日日在院中焚艾。所幸未染。';}},
+  {t:'研究病源',f:function(s){
+    if(ck(35+s.wuxing*4)){stAdd(s,'wuxing',1);return '你翻遍医书，查明是水源被污。挖井改渠，疫情立解。<br>'+G('悟性+1');}
+    hurt(s);return '你研究得太投入，自己也染上了。烧糊涂了半月。<br>'+Rd('身负重伤');}},
+  {t:'远走避疫',f:function(s){
+    if(ck(60+s.qiyun*3))return '你收拾细软投奔远亲，躲过一劫。';
+    hurt(s);return '路上还是染了病，客栈躺了一个月。<br>'+Rd('身负重伤');}}
+ ]);
+E('e_guanfu','危机',4,0,function(s){return s.realm<2},'官府加税',
+ '县衙的告示贴上了村口：加征仙税三成，抗税者充军。',
+ [
+  {t:'咬牙缴税',f:function(s){gs(s,-80);return '你把攒下的铜钱数了三遍才交上去。<br>'+Rd('灵石-80');}},
+  {t:'串联抗税',f:function(s){
+    if(ck(40+s.daoxin*3))return '你们连夜写了万民书，惊动了府城。税加不成了。';
+    gs(s,-150);hurt(s);return '带头的被差役打得皮开肉绽，你也在其中，还被罚了税。<br>'+Rd('灵石-150，身负重伤');}},
+  {t:'远走他乡',f:function(s){stAdd(s,'qiyun',1);return '你背起行囊去了邻县，天下之大，何处不能活人。<br>'+G('气运+1');}}
+ ]);
+E('e_zousi','危机',4,0,null,'夜行商队',
+ '夜半有人叩窗："缺钱么？帮我们押趟货，报酬丰厚。别问是什么货。"',
+ [
+  {t:'入伙押货',f:function(s){
+    if(ck(50+s.daoxin*2)){gs(s,280);stAdd(s,'daoxin',-1);return '一路上风平浪静，你挣了一票快钱。<br>'+G('灵石+280')+Rd('，道心-1');}
+    gs(s,-100);hurt(s);return '半路撞上巡检，货被抄了，你挨了二十板子。<br>'+Rd('灵石-100，身负重伤');}},
+  {t:'断然拒绝',f:function(s){stAdd(s,'daoxin',1);return '来历不明的钱，烫手。<br>你关上窗，睡了个安稳觉。'+G('道心+1');}},
+  {t:'暗中报官',f:function(s){gs(s,120);stAdd(s,'daoxin',1);return '官府顺藤摸瓜端了窝点，赏了你。只是从此夜里总觉得有人盯着你。<br>'+G('灵石+120，道心+1');}}
+ ]);
+
+/* ---- 灵根专属 ---- */
+E('e_hunDun','奇遇',6,2,function(s){return s.lg===4},'混沌显象',
+ '打坐之际，识海深处浮起一团灰蒙蒙的雾气，万象在其中生灭不定——那是混沌。万年不出一人的混沌灵根，今日见了真章。',
+ [
+  {t:'深入观想',f:function(s){
+    if(ck(35+s.wuxing*4)){stAdd(s,'wuxing',1);gx(s,400);return '你的神魂一寸寸沉入混沌，出定时恍如隔世。世间法理在你眼前透明了几分。<br>'+G('悟性+1，修为大进');}
+    xinmo(s);return '混沌吞没了你的神识，你狼狈退出时，识海里多了一片挥之不去的灰。<br>'+Rd('心魔滋生');}},
+  {t:'铭刻于心，徐徐图之',f:function(s){stAdd(s,'daoxin',1);gx(s,150);return '你不敢贪多，只将那一瞬感悟刻在心头，日日温养。<br>'+G('道心+1，修为+150');}},
+  {t:'以混沌炼入己身功法',f:function(s){gx(s,250);stAdd(s,'wuxing',1);return '混沌灵根吞纳万象。你把这道显象炼进自家功法，进境陡然一快。<br>'+G('修为+250，悟性+1');}},
+  {t:'敬而远之',f:function(s){stAdd(s,'daoxin',1);return '万年一遇的机缘，你却先想到了"福薄担不起"四个字。<br>收功，起身，云散。'+G('道心+1');}}
+ ]);
+E('e_feiBi','奇遇',6,1,function(s){return s.lg===0},'绝壁古碑',
+ '采药失足坠崖，你挂在半空的枯藤上，正对一面古碑："无灵根者，以身为炉，以苦为薪。"',
+ [
+  {t:'以身为炉，照做',f:function(s){
+    if(ck(30+s.bones*5)){stAdd(s,'bones',2);gx(s,300);logT(s,'照古碑法门，以身为炉');return '你照碑上法门引气入骨——灵气不入丹田，入四肢百骸。疼得钻心，却也痛快。<br>'+G('根骨+2，修为+300');}
+    hurt(s);return '第一遍周天走完，你七窍渗血，跌在崖底草丛里半天没能动。<br>但那行字，你记住了。'+Rd('身负重伤');}},
+  {t:'拓印碑文卖钱',f:function(s){gs(s,300);return '修仙界年年有人收这类"绝望古碑"拓片，卖相极好。<br>'+G('灵石+300');}},
+  {t:'把碑上的话骂出来',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你吊在藤上骂了半个时辰，骂完忽然笑出声——废灵根又如何，命是自己的。<br>'+G('道心+1，气运+1');}},
+  {t:'长揖一礼，转身离去',f:function(s){stAdd(s,'daoxin',2);return '你朝古碑长揖到地。认命，还是不认？<br>你在心里答了一句，然后开始往上爬。'+G('道心+2');}}
+ ]);
+E('e_lingBai','奇遇',5,1,function(s){return s.lg>=3},'灵气朝拜',
+ '行走山间，方圆十里的灵气忽然如百鸟朝凤般向你涌来——天灵根之体，引天地侧目。',
+ [
+  {t:'张口吞纳',f:function(s){
+    if(ck(40+s.qiyun*3)){gx(s,500);return '你张开全身气窍，灵气如江河灌顶。三日后你从定中醒来，衣袍尽碎，气息暴涨。<br>'+G('修为大进');}
+    xinmo(s);return '灵气来得太猛，经脉险些被撑裂。勉强收功后，好些天夜里都梦见自己胀破了。<br>'+Rd('心魔滋生');}},
+  {t:'收束心神，缓缓炼化',f:function(s){gx(s,250);stAdd(s,'daoxin',1);return '你盘坐三日，如大地纳河，点滴不漏。慢是慢些，全是自己的。<br>'+G('修为+250，道心+1');}},
+  {t:'导灵气淬体',f:function(s){stAdd(s,'bones',1);return '你分出大股灵气反复冲刷四肢百骸。七日之后，皮肉如新，筋骨如玉。<br>'+G('根骨+1');}},
+  {t:'引灵气泽被山民',f:function(s){stAdd(s,'daoxin',2);stAdd(s,'qiyun',1);logT(s,'引灵气济一山');return '你引着过剩的灵气漫过山下村庄。那年庄稼，一穗结了三穗的籽。<br>山民为你立了生祠。'+G('道心+2，气运+1');}}
+ ]);
+
+/* ---- 属性专属奇遇 ---- */
+E('e_jinGang','奇遇',5,2,function(s){return s.bones>=9},'金刚关',
+ '你体内气血鼓荡如雷，隐隐要冲破一层看不见的关隘——肉身成圣，就差一步。',
+ [
+  {t:'药浴淬体',req:function(s){return s.stones>=300},f:function(s){
+    gs(s,-300);stAdd(s,'bones',1);logT(s,'药浴淬体，肉身精进');
+    return '三百度烈火药汤轮番浸泡，你疼得咬碎了一根木棍。出浴时，皮肤下隐隐有金光流转。<br>'+G('根骨+1');}},
+  {t:'入雷雨中淬体',f:function(s){
+    if(ck(35+s.bones*4)){stAdd(s,'bones',1);gx(s,200);return '你赤身立于雷雨里七天七夜，让雷意顺着骨髓走了一遍。体魄脱胎换骨。<br>'+G('根骨+1，修为+200');}
+    hurt(s);return '第七夜一道野雷劈偏了。你在焦土里躺了半个月，皮糙了不少。<br>'+Rd('身负重伤');}},
+  {t:'以战养战',f:function(s){return fight(s,16+s.realm*4,
+    function(){stAdd(s,'bones',1);gs(s,150);return '你专找凶地凶兽打，遍体鳞伤又次次不死——你的骨头，越来越硬。<br>'+G('根骨+1，灵石+150');},
+    function(){gs(s,-100);return '这次遇到个真狠角色。你在山沟里躺了两个月。<br>'+Rd('灵石-100，身负重伤');});}},
+  {t:'欲速则不达，缓缓来',f:function(s){stAdd(s,'daoxin',1);gx(s,120);return '你收住血气，回到每日打熬的老路子上。<br>慢，但是稳。'+G('道心+1，修为+120');}}
+ ]);
+E('e_tianWen','奇遇',5,2,function(s){return s.wuxing>=10},'仰问苍穹',
+ '夜观星轨，你忽然捕捉到一丝天地运转的脉络——一个问题在胸口燃烧，不问出来，坐立难安。',
+ [
+  {t:'仰天连问三日',f:function(s){
+    if(ck(30+s.wuxing*4)){wudao(s,6);stAdd(s,'wuxing',1);return '你立于山巅问了三天三夜。第三夜，一颗流星恰好划过你问的方向。<br>天地未答，你自答了。'+G('悟性+1，进入悟道状态');}
+    xinmo(s);return '问到最后，你连问题本身都开始模糊。神思耗损过度。<br>'+Rd('心魔滋生');}},
+  {t:'写下来，留给后来人',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);gx(s,180);return '你把满腹疑问刻上崖壁。多年后，一个少年在此碑前顿悟，你的名字随碑文传了下去。<br>'+G('道心+1，气运+1，修为+180');}},
+  {t:'以此问道友',f:function(s){gx(s,220);stAdd(s,'daoxin',1);return '你带着问题走了三座山。有人说你疯了，有人跟你吵了三天——吵完，你们成了道友。<br>'+G('修为+220，道心+1');}},
+  {t:'咽下去，继续赶路',f:function(s){stAdd(s,'daoxin',-1);return '你把问题咽了回去。它没有消失，只是沉到了心底最深处。<br>'+Rd('道心-1');}}
+ ]);
+E('e_tianMingS','奇遇',5,2,function(s){return s.qiyun>=10},'天命垂顾',
+ '钦天监夜观天象，报称"客星犯紫微，其应在野"。而那颗客星，正对着你所在的方向。',
+ [
+  {t:'顺天而行，广而告之',f:function(s){stAdd(s,'qiyun',1);gs(s,200);gx(s,300);logT(s,'天命之名传遍四方');return '你索性把"天命所归"的牌子挂了出来。各方送礼的送礼、下注的下注，你左右逢源。<br>'+G('气运+1，灵石+200，修为+300');}},
+  {t:'深藏功与名',f:function(s){stAdd(s,'daoxin',2);return '你连夜搬了家。钦天监的人扑了个空，只在旧居捡到一页写满字的纸。<br>天命？我自己的命，自己说了算。'+G('道心+2');}},
+  {t:'逆天改命',f:function(s){
+    if(ck(25+s.daoxin*4)){stAdd(s,'daoxin',2);gx(s,500);return '你挑了个雷夜，冲着天象磕了三个头，然后拔剑把引导星光的阵盘砸了。<br>天，毫无反应。你笑了——原来它也不过如此。'+G('道心+2，修为大进');}
+    hurt(s);xinmo(s);return '你砸了阵盘的当夜，天雷滚滚而下。你半身焦黑地逃出百里。<br>'+Rd('身负重伤，心魔滋生');}},
+  {t:'去找钦天监问明白',f:function(s){gs(s,150);stAdd(s,'qiyun',1);return '监正亲自见你，彻夜长谈，末了送你一份厚礼："客星之说，真假参半。但你的命，是真的贵。"<br>'+G('灵石+150，气运+1');}}
+ ]);
+E('e_buXin','奇遇',4,3,function(s){return s.daoxin>=10},'不动明王关',
+ '心魔大军压境——幻象铺天盖地：功败垂成的、求而不得的、故人死别的。而你的心，静得像一口古井。',
+ [
+  {t:'以静制动，心印诸魔',f:function(s){wudao(s,6);stAdd(s,'daoxin',1);logT(s,'心关圆满');return '你不迎不拒，幻象来多少，便照见多少。七日之后，心魔大军如雪投炉。<br>你的道心，从此有了形状。'+G('道心+1，进入悟道状态');}},
+  {t:'收心魔为剑奴',f:function(s){
+    if(ck(40+s.daoxin*3)){gx(s,600);stAdd(s,'daoxin',-1);return '你把漫天心魔拧成一股，炼成识海里一柄黑色的剑。它听话，但它冷。<br>'+G('修为大进')+Rd('，道心-1');}
+    hurt(s);xinmo(s);return '心魔假意臣服，趁你炼化时反咬一口。<br>'+Rd('身负重伤，心魔滋生');}},
+  {t:'挥手，散之',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你只抬了抬手。不是法力，是底气——这些幻象，你已经不在意了。<br>'+G('道心+1，气运+1');}},
+  {t:'与心魔对坐，问它要什么',f:function(s){gx(s,300);stAdd(s,'wuxing',1);return '你问它："你到底想要什么？"它愣了很久："想要你，回头看一眼当年。"<br>你看了。它哭了。然后散了。'+G('悟性+1，修为+300');}}
+ ]);
+E('e_leiTai','奇遇',5,2,null,'擂台赌斗',
+ '坊市中央设下擂台，彩头丰厚，规矩简单：上台，赢了拿钱走人。',
+ [
+  {t:'登台赌斗',f:function(s){return fight(s,13+s.realm*5,
+    function(){gs(s,350);logT(s,'擂台连捷');return '你连赢五场，台下喝彩一浪高过一浪。庄家肉疼地数钱给你。<br>'+G('灵石+350');},
+    function(){gs(s,-100);return '第四场你遇到个硬茬子，被一拳打下台去。押自己的钱也输了。<br>'+Rd('灵石-100');});}},
+  {t:'押别人赢',req:function(s){return s.stones>=200},f:function(s){
+    if(ck(45+s.wuxing*3)){gs(s,320);return '你看人极准，押中的那位一路杀进决赛。庄家赔得直咧嘴。<br>'+G('灵石+320');}
+    gs(s,-200);return '大热门第三场就翻了船。你攥着空钱袋，懂了一个道理：擂台无常态。<br>'+Rd('灵石-200');}},
+  {t:'看完全场，偷师',f:function(s){gx(s,150);return '你在台下看了一整天，把各家路数默记于心，回去拆解了半月。<br>'+G('修为+150');}},
+  {t:'绕开这是非地',f:function(s){stAdd(s,'daoxin',1);return '赌斗之地，恩怨最多。你远远绕开。<br>'+G('道心+1');}}
+ ]);
+E('e_guZhou','奇遇',4,3,null,'湖心古舟',
+ '大泽深处泊着一艘无人古舟，船身刻满看不懂的道文。舟头一盏灯，自燃着，无人点。',
+ [
+  {t:'登舟随它去',f:function(s){
+    if(ck(30+s.qiyun*4)){var fb=giveFabao(s,R(2,4));gx(s,300);return '古舟载你行入雾中，三日三夜，泊在一座早已沉没的水府前。<br>'+G('法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'），修为+300');}
+    hurt(s);return '行到湖心，古舟骤然散架。你凫水半日才上岸，落下一身寒疾。<br>'+Rd('身负重伤');}},
+  {t:'拆船板卖钱',f:function(s){gs(s,280);return '刻着道文的船板在坊市被炒成"仙人遗物"。你赚了一笔，心里有点虚。<br>'+G('灵石+280');}},
+  {t:'焚香遥拜，不登舟',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你朝古舟拜了三拜。舟头那盏灯，似乎亮了一分。<br>'+G('道心+1，气运+1');}},
+  {t:'拓印道文',req:function(s){return s.wuxing>=8},f:function(s){gx(s,350);stAdd(s,'wuxing',1);return '你拓下满船道文，回去参详数月——此舟行过的地方，记着一门失传的水行遁法。<br>'+G('悟性+1，修为+350');}}
+ ]);
+E('e_shiGuan','奇遇',4,4,null,'上古石棺',
+ '山腹地宫深处，一具石棺静静停了不知几千年。棺盖半开一线，里面传出微弱的呼吸声。',
+ [
+  {t:'推开棺盖',f:function(s){
+    if(ck(35+s.daoxin*4)){var fb=giveFabao(s,R(3,5));gx(s,400);return '棺中人早已坐化，掌心托着一枚宝光内蕴之物，见你而来，微微一亮——是等你等得太久了。<br>'+G('法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'），修为+400');}
+    xinmo(s);hurt(s);return '棺盖推开的刹那，一缕怨气顺着手臂钻入！你连滚带爬逃出地宫。<br>'+Rd('身负重伤，心魔滋生');}},
+  {t:'以礼安葬棺中人',f:function(s){stAdd(s,'qiyun',2);stAdd(s,'daoxin',1);logT(s,'安葬上古遗蜕');return '你取石为盖，堆土为陵，拜了三拜。出地宫时，天光正好。<br>冥冥中似有一声叹息，似谢。'+G('气运+2，道心+1');}},
+  {t:'静坐棺前，守它一夜',f:function(s){gx(s,250);return '你在棺前枯坐一夜，听那若有若无的呼吸声，与自己渐渐重合。<br>天明时你懂了些关于"生死"的东西。'+G('修为+250');}},
+  {t:'合上棺盖，封死地宫',f:function(s){stAdd(s,'daoxin',1);gx(s,120);return '不该看的不看。你封了地宫，只在洞口种了棵松。<br>心境澄明，修行反而顺了。'+G('道心+1，修为+120');}}
+ ]);
+
+/* ---- 高境界奇遇 ---- */
+E('e_gaoXiu','奇遇',5,5,function(s){return s.realm>=5},'洞天福地',
+ '你神游太虚之际，发现了一处未被记载的小洞天——灵气浓郁得近乎化液，只是入口处有道童坐关，已坐了不知几百年。',
+ [
+  {t:'礼拜道童，求借地修炼',f:function(s){
+    if(ck(40+s.daoxin*3)){gx(s,800);stAdd(s,'daoxin',1);return '道童睁眼看了你一炷香，侧身让开："静修百日，不可贪。"<br>百日之后你出洞天，境界水到渠成。'+G('道心+1，修为暴涨');}
+    return '道童眼皮都没抬："福地有限，道友请回。"<br>你在洞天外盘坐了三日，也得了些雨露。'+G('修为+150');}},
+  {t:'仗着修为硬闯',f:function(s){return fight(s,18+s.realm*5,
+    function(){gx(s,1000);stAdd(s,'daoxin',-1);return '你击败坐关道童，占了洞天十日。出关时道童只说了一句："你欠此地一段因果。"<br>'+G('修为暴涨')+Rd('，道心-1');},
+    function(){gs(s,-150);return '道童袖袍一挥，你便飞出十里，如断线纸鸢。<br>'+Rd('灵石-150，身负重伤');});}},
+  {t:'记下位置，做个人情',f:function(s){gs(s,300);stAdd(s,'qiyun',1);if(s.sect)s.contrib+=150;
+    return '你把洞天位置献给了'+(s.sect?'宗门，长老许你日后优先入内，记了大功':'一位大能，得了不菲的谢仪')+'.<br>'+G('灵石+300，气运+1'+(s.sect?'，贡献+150':''));}},
+  {t:'转身就走，机缘不可强求',f:function(s){stAdd(s,'daoxin',1);return '有守便有缘，无缘莫强求。<br>你下山时哼了支小曲，步子轻快。'+G('道心+1');}}
+ ]);
+
+/* ---- 高境界危机 ---- */
+E('e_jieLie','危机',4,5,null,'界域裂缝',
+ '一夜之间，天幕裂开一道细缝。缝里渗出的气息，让方圆百里的修士心神不宁。',
+ [
+  {t:'裂口处探查',f:function(s){
+    if(ck(30+s.qiyun*4)){gx(s,600);var fb=null;if(ck(40))fb=giveFabao(s,R(3,5));
+      return '你贴着裂缝拾得域外碎片，其中蕴含的法则之力，闻所未闻！<br>'+G('修为大幅精进'+(fb?'，得法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'）':''));}
+    hurt(s);xinmo(s);return '裂缝里伸出一只不该存在的手。你断了一根手指才挣脱，那道目光至今还在梦里。<br>'+Rd('身负重伤，心魔滋生');}},
+  {t:'号召散修共封之',f:function(s){return fight(s,20+s.realm*5,
+    function(){stAdd(s,'daoxin',2);gs(s,200);logT(s,'率众封印界缝');return '九位修士以身为桩，血祭七日，界缝闭合。你的名字，被记进了那一年的大事记。<br>'+G('道心+2，灵石+200');},
+    function(){return '封印失败。你背着两个昏迷的道友逃出来，回头看见天上的裂缝又宽了一寸。<br>'+Rd('身负重伤');});}},
+  {t:'报予各大宗门',f:function(s){gs(s,250);
+    if(s.sect){s.contrib+=200;return '你画影图形报了上去。宗门出动长老坐镇，记你首功一件。<br>'+G('贡献+200，灵石+250');}
+    return '各大宗门联手封山，赏格里居然有你一份——报信者，赏灵石二百五。<br>……这数字是不是故意的？'+G('灵石+250');}},
+  {t:'远遁千里',f:function(s){stAdd(s,'daoxin',-1);return '你收拾行李往南走了三千里。夜里抬头，那道裂缝还是隐约可见。<br>'+Rd('道心-1');}}
+ ]);
+E('e_duJieQian','危机',4,4,null,'前辈渡劫',
+ '百里外雷云压城——有前辈正在渡劫！雷光如龙，威压让方圆百里灵禽走兽伏地不敢动。',
+ [
+  {t:'抵近观劫悟法',f:function(s){
+    if(ck(30+s.wuxing*4)){wudao(s,5);gx(s,300);return '你顶着威压挪到十里外，把九道天雷的起落看了个通透。雷法之理，尽在一目。<br>'+G('进入悟道状态，修为+300');}
+    hurt(s);return '第六道雷的余波扫过，你被掀飞出去，五脏六腑翻了个个。<br>'+Rd('身负重伤');}},
+  {t:'守在外围，救人收殓',f:function(s){
+    if(ck(50)){stAdd(s,'qiyun',1);stAdd(s,'daoxin',1);gs(s,300);logT(s,'收殓渡劫前辈遗蜕');return '前辈渡劫失败。你冒雷收殓了他的遗蜕与半囊遗物，交予其故人。故人泣而赠你厚礼。<br>'+G('气运+1，道心+1，灵石+300');}
+    gs(s,150);return '前辈安然渡过，临去前随手点了点外围几人，你也得了半瓶丹药。<br>'+G('灵石+150');}},
+  {t:'趁乱去摸雷劫宝地',f:function(s){
+    if(ck(40+s.qiyun*3)){gs(s,400);stAdd(s,'daoxin',-1);return '渡劫之地的灵气被雷搅成了液态，你抢了两坛就走。发这种财，心里到底不踏实。<br>'+G('灵石+400')+Rd('，道心-1');}
+    hurt(s);return '你刚摸进去，第九道雷正好落下。你顶着雷波逃出来，半边身子麻了三天。<br>'+Rd('身负重伤');}},
+  {t:'闭门不出',f:function(s){gx(s,60);return '你把门窗封死，念了一夜静心咒。<br>次日出门，山还是山。'+G('修为+60');}}
+ ]);
+E('e_moWei','危机',5,3,function(s){return !f(s,'mo')&&!f(s,'moGu')},'魔修截杀',
+ '荒山夜路，三道黑影拦住去路："把储物袋留下，给你留个全尸。"',
+ [
+  {t:'拔剑死战',f:function(s){return fight(s,17+s.realm*5,
+    function(){gs(s,350);stAdd(s,'daoxin',1);logT(s,'荒山反杀魔修');return '你以伤换命，放倒三人。搜出的东西让你的手都在抖——全是害人攒下的血财。<br>你把钱收了，把人埋了。'+G('灵石+350，道心+1');},
+    function(){gs(s,-200);return '魔功诡异，你拼死才突围，储物袋被夺走大半。<br>'+Rd('灵石-200，身负重伤');});}},
+  {t:'借地形周旋',f:function(s){
+    if(ck(30+s.wuxing*4)){gs(s,200);return '你把三人引进猎户的老陷阱区，借势反杀一人，余者遁走。你顺走了那个人的袋子。<br>'+G('灵石+200');}
+    hurt(s);return '地形不熟，反被包了饺子。你滚下山坡才逃出生天。<br>'+Rd('身负重伤');}},
+  {t:'高呼宗门执法队',req:function(s){return !!s.sect},f:function(s){
+    if(ck(55+s.realm*3)){s.contrib+=80;return '你一声长啸，远处真有执法队的应和。黑影们骂了一声，散了。<br>'+G('贡献+80');}
+    hurt(s);return '喊了半天没人应——但黑影们不敢赌，丢下一句"算你命大"退了。<br>你后背全湿了。'+Rd('身负重伤');}},
+  {t:'弃财保命',f:function(s){gs(s,-Math.min(s.stones,300));return '你把储物袋扔了过去。黑影验货后放行，临走还"好心"提醒："往东走，西边还有一伙。"<br>'+Rd('破财免灾');}}
+ ]);
+/* ---- 人情 ---- */
+E('e_xiYan','人情',5,0,null,'邻里喜宴',
+ '邻村张家嫁女，十里八乡都来吃席，你家也递了帖子。',
+ [
+  {t:'随礼赴宴',req:function(s){return s.stones>=60},rt:'需灵石60',f:function(s){
+    gs(s,-60);stAdd(s,'daoxin',1);return '八碗八碟，宾主尽欢。你喝多了点，但心里热乎。<br>'+G('道心+1');}},
+  {t:'帮着操办',f:function(s){stAdd(s,'qiyun',1);gs(s,30);return '你忙前忙后三天，张家人把你当自家人看待。<br>'+G('气运+1，灵石+30');}},
+  {t:'借机卖货',f:function(s){gs(s,100);return '你挑了担子去摆摊，一天下来赚得盆满钵满。<br>'+G('灵石+100');}},
+  {t:'托辞不往',f:function(s){return '自家事多，就免了这份人情。<br>你在家吃了顿素面。';}}
+ ]);
+E('e_guYou','人情',5,0,null,'故人重逢',
+ '街角一个熟悉的背影回头——是多年未见的老友，鬓角也白了。',
+ [
+  {t:'把酒叙旧',f:function(s){gs(s,-40);stAdd(s,'daoxin',1);gx(s,100);return '你们从午后聊到月升，说到年少荒唐事，笑出眼泪。<br>'+G('道心+1，修为+100');}},
+  {t:'合伙营生',f:function(s){
+    if(ck(50)){gs(s,250);return '你们合伙贩了一趟茶，赚了个满意。<br>'+G('灵石+250');}
+    gs(s,-120);return '老友看走了眼，这趟折了本。你安慰他："钱乃身外物。"<br>'+Rd('灵石-120');}},
+  {t:'托他办事',f:function(s){
+    if(ck(45+s.wuxing*3)){gs(s,150);return '他在县里有些门路，帮你办成了拖了半年的难事。<br>'+G('灵石+150');}
+    return '他尽了力，但事没办成。情分还在，你请他吃了顿饭。';}}
+ ]);
+E('e_enRen','人情',4,0,null,'恩人相求',
+ '当年你落难时救过你的那位恩人登门了，欲言又止，面有难色。',
+ [
+  {t:'倾力相助',req:function(s){return s.stones>=200},rt:'需灵石200',f:function(s){
+    gs(s,-200);stAdd(s,'daoxin',2);stAdd(s,'qiyun',1);logT(s,'倾力报恩');
+    return '恩人儿子重病，你出钱出力请来名医。他老泪纵横，逢人便说你的好。<br>'+G('道心+2，气运+1');}},
+  {t:'量力而行',req:function(s){return s.stones>=50},rt:'需灵石50',f:function(s){
+    gs(s,-50);stAdd(s,'daoxin',1);return '你送去了些银钱药材，聊表心意。<br>'+G('道心+1');}},
+  {t:'婉言相拒',f:function(s){stAdd(s,'daoxin',-1);return '你推说手头也紧。他理解地点点头，背影有些佝偻。<br>'+Rd('道心-1');}}
+ ]);
+E('e_daoShi','人情',4,0,null,'游方道人',
+ '村口老槐树下，一个道人掐指掐了半天，忽然叫住你："这位郎君，且留步。"',
+ [
+  {t:'求他一卦',req:function(s){return s.stones>=100},rt:'需灵石100',f:function(s){
+    gs(s,-100);
+    if(ck(40+s.qiyun*3)){stAdd(s,'wuxing',1);return '他断你"困于旧事，惑于来路"。你静坐一夜，果然勘破一重心结。<br>'+G('悟性+1');}
+    return '他收了钱说了句"施主面相贵不可言"，然后不见踪影了。<br>……这话听着就像是要账的。';}},
+  {t:'听他疯言',f:function(s){
+    if(ck(50)){stAdd(s,'daoxin',1);return '"世人求长生，先求不怕死。"你听完若有所思。<br>'+G('道心+1');}
+    gx(s,80);return '他讲了半天"道在屎溺"，你竟听出些名堂。<br>'+G('修为+80');}},
+  {t:'嗤笑而去',f:function(s){stAdd(s,'daoxin',-1);return '你摇着头走开："神棍。"<br>身后传来一声轻叹。'+Rd('道心-1');}}
+ ]);
+E('e_jiaShu','人情',4,0,null,'一封家书',
+ '捎信人送来一封家书，信纸被眼泪洇过一角。',
+ [
+  {t:'寄钱回家',req:function(s){return s.stones>=100},rt:'需灵石100',f:function(s){
+    gs(s,-100);stAdd(s,'daoxin',2);return '家中老宅漏了雨。你把钱和一句"别省着"一起捎了回去。<br>'+G('道心+2');}},
+  {t:'修书报平安',f:function(s){stAdd(s,'daoxin',1);return '你写了满满三页纸，只字不提在外吃过的苦。<br>'+G('道心+1');}},
+  {t:'抽身回家一趟',f:function(s){gs(s,-60);stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);
+    return '你回了趟家。娘做了一桌子菜，一个劲往你碗里夹。<br>'+G('道心+1，气运+1');}}
+ ]);
+E('e_jiZu','人情',4,0,null,'年节祭祖',
+ '又是一年冬至，祠堂里香火明灭，族谱一页页翻过，多少名字已成故纸。',
+ [
+  {t:'诚心祭拜',f:function(s){stAdd(s,'daoxin',1);return '你逐一擦净先人牌位，添了三炷香。<br>'+G('道心+1');}},
+  {t:'出资大办',req:function(s){return s.stones>=120},rt:'需灵石120',f:function(s){
+    gs(s,-120);stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你包下了全族的祭品酒席，族老们连连颔首。<br>'+G('道心+1，气运+1');}},
+  {t:'无心操办',f:function(s){stAdd(s,'daoxin',-1);return '你婉拒了族里的邀请。夜里做了个梦，梦里无人说话，只是看着你。<br>'+Rd('道心-1');}}
+ ]);
+
+/* ---- 道心 ---- */
+E('e_moChuan','道心',5,1,null,'魔修授功',
+ '月黑风高，一名黑袍修士拦住你："你根骨不错。跟本座走，十年之后，杀伐由心。"',
+ [
+  {t:'随他修魔',f:function(s){gx(s,500);stAdd(s,'daoxin',-2);s.fl.push('moXi');logT(s,'随魔修修行');
+    return '你跪在他面前磕了三个头。他传你一门邪功，进境快得吓人，只是夜里总听见有人在哭。<br>'+G('修为+500')+Rd('，道心-2');}},
+  {t:'出手斩之',f:function(s){return fight(s,20+s.realm*5,
+    function(){stAdd(s,'daoxin',2);gs(s,200);logT(s,'斩杀魔修');return '你一剑穿其胸膛。黑袍化烟散去，只留一枚储物袋。<br>'+G('道心+2，灵石+200');},
+    function(){gs(s,-100);return '他袖中飞出万千黑丝，你且战且退，挂了彩。<br>'+Rd('灵石-100，身负重伤');});}},
+  {t:'上报宗门',req:function(s){return !!s.sect},rt:'需先拜入宗门',f:function(s){
+    s.contrib+=100;stAdd(s,'daoxin',1);return '宗门派出执法堂，一举端了他的老巢。记你首功。<br>'+G('贡献+100，道心+1');}},
+  {t:'断然拒绝',f:function(s){stAdd(s,'daoxin',1);return '"道不同。"你转身就走，没有回头。<br>'+G('道心+1');}},
+  {t:'以魔制魔，反吞其功',req:function(s){return f(s,'moGu')},f:function(s){
+    gx(s,700);stAdd(s,'daoxin',-1);logT(s,'反夺魔修功法');
+    return '你天生魔骨，他那门邪功在你面前如同儿戏。三两下反夺其功，吞了个干净——黑袍修士跪在地上，脸色比月色还白。<br>'+G('修为+700')+Rd('，道心-1');}}
+ ]);
+E('e_xueJi','道心',4,1,null,'血祭法阵',
+ '荒庙地下竟藏着一座血祭法阵，白骨为基，怨气冲天，隐有妖异的力量诱惑着你。',
+ [
+  {t:'以血引之',f:function(s){stAdd(s,'bones',1);stAdd(s,'daoxin',-2);gx(s,600);
+    return '你割掌滴血于阵眼。一股蛮横的力量涌入四肢百骸，快意与负罪感同时淹没你。<br>'+G('根骨+1，修为+600')+Rd('，道心-2');}},
+  {t:'毁去法阵',f:function(s){return fight(s,16+s.realm*4,
+    function(){stAdd(s,'daoxin',2);gs(s,200);return '你掀了阵基，白骨悉数火化。地底传来一声悠长的叹息，似是解脱。<br>'+G('道心+2，灵石+200');},
+    function(){hurt(s);return '怨灵反扑！你带伤砸了阵眼，仓皇撤出。<br>'+Rd('身负重伤');});}},
+  {t:'记下位置卖钱',f:function(s){gs(s,250);stAdd(s,'daoxin',-1);return '你把消息卖给收"古物"的黑市，转头忘了这件事。<br>'+G('灵石+250')+Rd('，道心-1');}},
+  {t:'敬而远之',f:function(s){stAdd(s,'daoxin',1);return '有些门，开了就关不上。你填土封庙，转身离去。<br>'+G('道心+1');}}
+ ]);
+E('e_xinMo','道心',5,1,function(s){return s.realm>=1},'夜半心魔',
+ '入定之际，心底深处忽然浮起一张笑脸——那是你自己，只是眼神贪婪而疯狂。',
+ [
+  {t:'静心涤荡',f:function(s){
+    if(ck(35+s.daoxin*4)){stAdd(s,'daoxin',1);wudao(s);return '你与它对坐了整夜，不驱不避，最后它散成了晨雾。<br>'+G('道心+1，进入悟道状态');}
+    xinmo(s);return '它挥之不去，反而越缠越紧。你出定时长出了一口气，手心全是汗。<br>'+Rd('心魔滋生');}},
+  {t:'放它出来',f:function(s){gx(s,300);stAdd(s,'daoxin',-1);return '你索性纵容那股狠劲运转周天。修为大进，心却沉了一分。<br>'+G('修为+300')+Rd('，道心-1');}},
+  {t:'服定神丹',req:function(s){return s.stones>=150},rt:'需灵石150',f:function(s){
+    gs(s,-150);stAdd(s,'daoxin',1);return '丹药压下躁动，你安然入定到天明。<br>'+G('道心+1');}},
+  {t:'强行镇压',f:function(s){
+    if(ck(40+s.bones*3))return '你以蛮力封死心湖。它能耐暂失，却未真正消散。';
+    hurt(s);xinmo(s);return '镇压失败！气血逆行，你喷出一口血。<br>'+Rd('身负重伤，心魔滋生');}}
+ ]);
+E('e_xieWu','道心',4,1,null,'邪物惑心',
+ '河滩上冲来一只黑玉盒，合盖着却嗡嗡低语："开我……开我……"',
+ [
+  {t:'打开它',f:function(s){
+    if(ck(45+s.daoxin*3)){gx(s,350);return '盒中并无邪物，唯有一页无名功法残篇，你如获至宝。<br>'+G('修为+350');}
+    xinmo(s);gs(s,-100);return '盒中黑气扑面，钻入七窍！你昏睡三日，醒来时心湖上多了一道阴影。<br>'+Rd('心魔滋生');}},
+  {t:'毁去玉盒',f:function(s){stAdd(s,'daoxin',2);return '你以真火焚盒。低语声在灰烬里变成一声凄厉尖叫，然后寂静。<br>'+G('道心+2');}},
+  {t:'上缴宗门',req:function(s){return !!s.sect},rt:'需先拜入宗门',f:function(s){
+    s.contrib+=150;return '长老们将玉盒层层封印。执事夸你谨慎，记了一功。<br>'+G('贡献+150');}},
+  {t:'卖掉它',f:function(s){gs(s,350);stAdd(s,'daoxin',-2);return '黑市买家爽快付钱，还问"还有吗"。<br>你没敢回答。'+G('灵石+350')+Rd('，道心-2');}}
+ ]);
+E('e_duoShe','道心',3,2,function(s){return s.realm>=2},'夺舍之危',
+ '你以为捡到的是一具前人遗蜕——那"遗蜕"忽然睁开了眼，一股神魂狠狠撞向你的眉心！',
+ [
+  {t:'神魂抗争',f:function(s){
+    if(ck(25+s.daoxin*3+s.bones*2)){stAdd(s,'wuxing',1);gx(s,400);logT(s,'反夺舍，吞其记忆');
+      return '你在识海中死死咬住那道残魂，硬生生吞了它！无数修行记忆涌入脑海。<br>'+G('悟性+1，修为+400');}
+    xinmo(s);hurt(s);return '两败俱伤。你逼退了他，但识海里从此多了一个冷笑的声音。<br>'+Rd('心魔滋生，身负重伤');}},
+  {t:'自散修为保命',f:function(s){s.exp=Math.round(s.exp*0.5);stAdd(s,'daoxin',1);
+    return '你亲手斩断半生修为。残魂失去凭依，凄厉消散。<br>'+Rd('修为折半')+G('，道心+1');}},
+  {t:'同归于尽之志',f:function(s){
+    if(ck(20+s.daoxin*4+s.realm*3)){stAdd(s,'daoxin',2);return '你把神魂烧成一根火柴，抵在他咽喉："来，一起死。"<br>他退缩了，消散前留下一声不甘的咆哮。'+G('道心+2');}
+    return null; /* 死亡特殊处理 */ }},
+  {t:'祈求先辈庇佑',f:function(s){
+    if(ck(30+s.qiyun*4)){return '冥冥中似有一只手按住了你的眉心。残魂如遭雷击，溃散于识海。';}
+    xinmo(s);return '无人应答。你只能自己咬着牙撑过那漫长的一夜。<br>'+Rd('心魔滋生');}}
+ ]);
+E('e_zhengXie','道心',5,1,null,'正邪岔路',
+ '山道塌方，一位重伤的散修倒在血泊里，而他怀中的储物袋露出一角，宝光诱人。四下无人。',
+ [
+  {t:'救人为先',f:function(s){stAdd(s,'daoxin',2);stAdd(s,'qiyun',1);
+    return '你背着他走了十里山路。他伤愈后执意传你三日功法以谢。<br>'+G('道心+2，气运+1，修为+150');gx(s,150);}},
+  {t:'取袋走人',f:function(s){gs(s,400);stAdd(s,'daoxin',-2);return '你取走储物袋，头也不回。身后传来一声几不可闻的呜咽。<br>'+G('灵石+400')+Rd('，道心-2');}},
+  {t:'两全之策',f:function(s){
+    if(ck(20+s.wuxing*5)){stAdd(s,'daoxin',1);gs(s,200);gx(s,150);return '你先止住他的血，再取走一小袋灵石作"诊金"，他竟笑着点头。<br>'+G('道心+1，灵石+200，修为+150');}
+    hurt(s);return '你拆解储物袋的禁制时手一抖，反被炸伤。人财两空。<br>'+Rd('身负重伤');}},
+  {t:'绕道而行',f:function(s){stAdd(s,'daoxin',-1);return '你假装没看见。此后半个月，梦里总有人追问："为何见死不救？"<br>'+Rd('道心-1');}}
+ ]);
+E('e_wanHun','道心',3,2,null,'万魂幡',
+ '古战场残丘下，一杆黑幡半埋土中，幡面鬼影幢幢，幡杆寒冷如冰。',
+ [
+  {t:'祭炼此幡',f:function(s){s.fabao=s.fabao||{n:'万魂幡',tier:3};if(s.fabao.n==='万魂幡'){s.fabao.tier=clamp(s.fabao.tier+1,1,5);}
+    stAdd(s,'daoxin',-2);logT(s,'祭炼万魂幡');
+    return '你以精血喂幡七日，万魂哀鸣中幡面化作你的影子。<br>'+G('法宝万魂幡精进')+Rd('，道心-2');}},
+  {t:'封印古幡',f:function(s){stAdd(s,'daoxin',1);return '你以镇字符封死幡面，深埋入土，上压三丈青石。<br>'+G('道心+1');}},
+  {t:'上缴宗门',req:function(s){return !!s.sect},rt:'需先拜入宗门',f:function(s){
+    s.contrib+=200;return '执法堂全力剿平了古战场的阴煞。长老赞你:此功不小。<br>'+G('贡献+200');}},
+  {t:'参研幡上禁制',f:function(s){gx(s,250);return '幡面禁制诡异精妙，你拆解了一遍，受益匪浅。<br>'+G('修为+250');}}
+ ]);
+
+/* ---- 情缘 ---- */
+E('e_houXie','情缘',7,0,function(s){return !s.yuan&&!s.yuanFail&&!f(s,'wuYu')&&s.age>=16&&!s.daolvDead},'萍水相逢',
+ '桥头的伞檐下，你与一位素不相识之人躲了半场急雨。抬眼时，目光相接。',
+ [
+  {t:'开口结识',f:function(s){
+    if(ck(45+s.qiyun*3)){s.yuan={n:pick(NPC_X)+pick(NPC_M),tr:pick(NPC_TR),st:1};
+      return '雨声里你们聊了一路。临别时，' + s.yuan.n + '（' + s.yuan.tr + '）回头一笑："下次，可别再装作偶遇了。"<br>'+G('结识有缘人');}
+    return '对方客气地颔首致意，收伞走远。桥上只剩雨声。<br>萍水相逢，即是缘分尽了。';}},
+  {t:'赠伞相送',req:function(s){return s.stones>=60},rt:'需灵石60',f:function(s){
+    gs(s,-60);s.yuan={n:pick(NPC_X)+pick(NPC_M),tr:pick(NPC_TR),st:1};
+    return '你把伞塞了过去，装作自己有雨具。' + s.yuan.n + '（' + s.yuan.tr + '）握着伞愣了愣，记住了你的名字。<br>'+G('结识有缘人');}},
+  {t:'以武会友',f:function(s){
+    if(ck(35+s.bones*3)){s.yuan={n:pick(NPC_X)+pick(NPC_M),tr:pick(NPC_TR),st:1};
+      return '你们在桥头空地过了三招。收势时相视大笑，英雄惜英雄。<br>'+G('结识有缘人');}
+    return '三招过后，对方拱手："阁下好俊的功夫，告辞。"<br>转身时带起一阵风。';}},
+  {t:'默默无言',f:function(s){return '你终究没有开口。雨停了，人散了。<br>有些相遇，一辈子只有一次。';}}
+ ]);
+E('e_qingYuan','情缘',8,0,function(s){return s.yuan&&s.yuan.st===1&&!s.daolvDead},'情愫暗生',
+ '与'+'那位有缘人'+'相识已有些时日，你发觉自己练功时总会走神，想起桥上的那一眼。',
+ [
+  {t:'挑明心意',f:function(s){
+    if(ck(40+s.qiyun*3+s.daoxin*2)){s.yuan.st=2;s.daolv=s.yuan.n;logT(s,'与'+s.yuan.n+'结为道侣');
+      return '月下，你把话说透了。良久的沉默后，对方把手放进了你的掌心。<br>'+G('结为道侣，从此双修共进');}
+    s.yuanFail=true;s.yuan=null;return '对方沉默了很久："你我道途不同，就此别过吧。"<br>'+Rd('无缘，就此错过');}},
+  {t:'再等等看',f:function(s){stAdd(s,'daoxin',1);return '有些话不必急在一时。<br>你们继续以朋友之名同行。'+G('道心+1');}},
+  {t:'黯然退出',f:function(s){s.yuanFail=true;s.yuan=null;return '你自觉配不上，慢慢断了往来。<br>多年后想起来，还是会叹一口气。'+Rd('缘分尽');}}
+ ]);
+E('e_shuangXiuE','情缘',7,1,function(s){return s.daolv&&!s.daolvDead},'双修问道',
+ '与道侣'+''+'同修多年，你们在各处寻访洞天，也彼此成就。',
+ [
+  {t:'共参妙谛',f:function(s){gx(s,250);stAdd(s,'daoxin',1);return '洞府中双修七日，元神交映，彼此道途都清亮了几分。<br>'+G('修为+250，道心+1');}},
+  {t:'赠礼传情',req:function(s){return s.stones>=150},rt:'需灵石150',f:function(s){
+    gs(s,-150);stAdd(s,'qiyun',1);return '你打了一支玉簪。对方簪在发间，一戴就是一生。<br>'+G('气运+1');}},
+  {t:'切磋武艺',f:function(s){
+    if(ck(40+s.bones*3)){stAdd(s,'bones',1);return '过招三百回合，你摸清了彼此的招式，也摸清了彼此的心。<br>'+G('根骨+1');}
+    gx(s,120);return '你输了，但输得心服口服，剑理上竟也有长进。<br>'+G('修为+120');}},
+  {t:'只是陪着',f:function(s){stAdd(s,'daoxin',1);return '什么也不做，并肩看了一场日落。<br>修行万里，不过为有人共黄昏。'+G('道心+1');}}
+ ]);
+E('e_yuXian','情缘',6,1,function(s){return s.daolv&&!s.daolvDead},'道侣遇险',
+ '传讯玉简骤然碎裂——你的道侣在外历练时，被邪修围困了！',
+ [
+  {t:'舍命相救',f:function(s){return fight(s,22+s.realm*4,
+    function(){stAdd(s,'daoxin',2);logT(s,'救回遇险道侣');return '你杀进杀出，背着重伤的道侣冲出重围。那一夜，谁都再没松开过谁的手。<br>'+G('道心+2');},
+    function(){hurt(s);stAdd(s,'daoxin',1);return '你拼死杀出一条血路，两人都伤得不轻，但——活着。<br>'+Rd('身负重伤')+G('，道心+1');});}},
+  {t:'智取围敌',f:function(s){
+    if(ck(30+s.wuxing*4)){stAdd(s,'wuxing',1);logT(s,'智救道侣');return '你散布宗门围剿的假消息，围敌一夜散尽。<br>'+G('悟性+1');}
+    hurt(s);return '计策被识破，你反被围。血战半日才与道侣会合。<br>'+Rd('身负重伤');}},
+  {t:'请求宗门驰援',req:function(s){return !!s.sect},rt:'需先拜入宗门',f:function(s){
+    s.contrib-=100;logT(s,'借宗门之力救回道侣');return '宗门执法队连夜驰援，邪修望风而逃。<br>'+Rd('贡献-100')+'人没事，比什么都强。';}},
+  {t:'鞭长莫及',f:function(s){
+    if(f(s,'gusha')||ck(18)){s.daolvDead=true;s.yuan=null;stAdd(s,'daoxin',-3);logT(s,'痛失道侣');
+      return '当你赶到时，只捡回了一枚碎裂的玉簪。<br>'+Rd('道侣罹难，道心-3');}
+    hurt(s);gs(s,-200);return '你散尽家财雇散修救援，总算抢回一条命。<br>'+Rd('灵石-200，身负重伤');}}
+ ]);
+E('e_shengSi','情缘',4,2,function(s){return s.daolv&&!s.daolvDead&&s.age>=40},'曲终人散',
+ '你的道侣近来总是很安静。今夜，对方握着你的手，平静地说出了那句话：寿元将尽。',
+ [
+  {t:'大道无情',f:function(s){s.daolvDead=true;s.yuan=null;stAdd(s,'daoxin',1);logT(s,'道侣坐化，道心渐坚');
+    return '你亲自为其守灵七日，而后收拾行囊，继续上路。<br>道心渐坚，只是夜太长。'+G('道心+1');}},
+  {t:'悲恸入魔',f:function(s){s.daolvDead=true;s.yuan=null;stAdd(s,'daoxin',-2);s.fl.push('mo');gx(s,400);logT(s,'道侣坐化，一夜白头');
+    return '你一夜白头。再抬眼时，眼底多了些说不清的东西。修为不进反狂涨。<br>'+Rd('道心-2')+G('，修为+400');}},
+  {t:'守忆余生',f:function(s){s.daolvDead=true;s.yuan=null;stAdd(s,'daoxin',2);stAdd(s,'qiyun',-1);logT(s,'道侣坐化，结庐守忆');
+    return '你在合葬之地结庐而居，种满了对方最爱的花。<br>一守，就是十年。'+G('道心+2')+Rd('，气运-1');}}
+ ]);
+
+/* ---- 宗门 ---- */
+E('e_yinJian','宗门',6,1,function(s){return !s.sect&&s.realm>=1},'仙门引荐',
+ '一位云游执事打量你许久："观你根骨尚可，可愿拜入仙门？"',
+ [
+  {t:'拜入青云剑宗',f:function(s){s.sect='qingyun';s.contrib=50;logT(s,'拜入青云剑宗');
+    return '你在祖师堂磕了九个头，领了青色道袍。师兄说："剑宗弟子，剑比命硬。"<br>'+G('拜入青云剑宗，贡献+50');}},
+  {t:'拜入太虚道宗',f:function(s){s.sect='taixu';s.contrib=50;logT(s,'拜入太虚道宗');
+    return '晨钟里，你领了道袍经卷。长老笑言："我宗不问出身，只问本心。"<br>'+G('拜入太虚道宗，贡献+50');}},
+  {t:'拜入玄阴宫',f:function(s){s.sect='xuanyin';s.contrib=50;stAdd(s,'daoxin',-1);logT(s,'拜入玄阴宫');
+    return '黑袍加身，宫主亲授入门魔功。"记住，"他说，"弱，才是原罪。"<br>'+G('拜入玄阴宫，贡献+50')+Rd('，道心-1');}},
+  {t:'婉拒好意',f:function(s){stAdd(s,'daoxin',1);return '"散修自有散修的活法。"你抱拳告辞。<br>'+G('道心+1');}}
+ ]);
+E('e_renWu','宗门',7,1,function(s){return !!s.sect},'宗门差事',
+ '执事堂张榜派差，数件门中事务等候弟子领办。',
+ [
+  {t:'领办巡山',f:function(s){return fight(s,10+s.realm*3,
+    function(){s.contrib+=80;gs(s,80);return '巡山三日，驱走两头低阶妖兽，一切太平。<br>'+G('贡献+80，灵石+80');},
+    function(){hurt(s);s.contrib+=40;return '山中撞上妖兽，你挂了彩，好歹把差事办完了。<br>'+Rd('身负重伤')+G('，贡献+40');});}},
+  {t:'领办护送',f:function(s){
+    if(ck(45+s.qiyun*3)){s.contrib+=120;gs(s,120);return '车队一路无话，安然抵达。货主豪爽，赏钱给得痛快。<br>'+G('贡献+120，灵石+120');}
+    hurt(s);s.contrib+=60;gs(s,60);return '半路遇上劫道的，你死保车队，杀出重围。<br>'+Rd('身负重伤')+G('，贡献+60，灵石+60');}},
+  {t:'入丹房帮工',f:function(s){s.contrib+=60;gs(s,60);
+    return '你帮丹师看了三天炉火，熏得满身药香，也算偷师了几手。<br>'+G('贡献+60，灵石+60，修为+80');gx(s,80);}},
+  {t:'捐资请缨',req:function(s){return s.stones>=100},rt:'需灵石100',f:function(s){
+    gs(s,-100);s.contrib+=150;return '你出钱资助门中购置丹炉，执事堂记了大功。<br>'+G('贡献+150');}}
+ ]);
+E('e_qieCuo','宗门',5,1,function(s){return !!s.sect},'同门切磋',
+ '演武场上锣声一响——有同门指名要与你切磋，四下里围满了看热闹的同修。',
+ [
+  {t:'登台应战',f:function(s){return fight(s,14+s.realm*4,
+    function(){s.contrib+=120;stAdd(s,'daoxin',1);return '你在众目睽睽下赢下此局，师兄们纷纷称贺。<br>'+G('贡献+120，道心+1');},
+    function(){s.contrib-=30;stAdd(s,'wuxing',1);return '你输了。但输的那一剑，你回去想了三天，反而通透了。<br>'+G('悟性+1')+Rd('，贡献-30');});}},
+  {t:'以教代战',f:function(s){s.contrib+=40;stAdd(s,'daoxin',1);return '你把新入门的师弟师妹指点了一遍。<br>'+G('贡献+40，道心+1');}},
+  {t:'场边观摩',f:function(s){gx(s,120);return '你看了一下午的比试，取各家之长。<br>'+G('修为+120');}}
+ ]);
+E('e_jiangDao','宗门',5,1,function(s){return !!s.sect},'长老讲道',
+ '大殿钟响，长老开坛讲道，满殿弟子屏息而坐。',
+ [
+  {t:'凝神参悟',f:function(s){
+    if(ck(30+s.wuxing*4)){wudao(s);return '讲到玄妙处，你只觉天灵盖一凉，如醍醐灌顶。<br>'+G('进入悟道状态');}
+    gx(s,200);return '你逐字逐句记下讲义，回房温习了整月。<br>'+G('修为+200');}},
+  {t:'当堂请教',f:function(s){
+    if(ck(50)){s.contrib+=60;gx(s,150);return '长老见你问得切中肯綮，多讲了半个时辰。<br>'+G('贡献+60，修为+150');}
+    return '你的问题太浅，长老愣了一下，和蔼地解答了。同门们很给面子地没有笑出声。';}},
+  {t:'打瞌睡',f:function(s){s.contrib-=20;return '前夜历练太累，你睡得口水横流，被记了小过。<br>'+Rd('贡献-20');}}
+ ]);
+E('e_enYuan','宗门',4,1,function(s){return !!s.sect},'门中恩怨',
+ '同门师兄弟为了一部功法的归属吵到执法堂，两拨人都来找你站队。',
+ [
+  {t:'居中调停',f:function(s){s.contrib+=60;stAdd(s,'daoxin',1);return '你两头劝解，又献了条两全的章程，风波平息。执事堂记你功一件。<br>'+G('贡献+60，道心+1');}},
+  {t:'帮理不帮亲',f:function(s){s.contrib+=40;stAdd(s,'daoxin',1);
+    return '你仗义执言，帮占理的一方说了话。虽然得罪了人，但问心无愧。<br>'+G('贡献+40，道心+1');}},
+  {t:'两不相帮',f:function(s){return '神仙打架，凡人回避。<br>你闭门谢客，专心修炼。';}},
+  {t:'落井下石',f:function(s){gs(s,200);stAdd(s,'daoxin',-2);return '你悄悄把证据卖给了另一方，得了重谢。<br>'+G('灵石+200')+Rd('，道心-2');}}
+ ]);
+
+/* ---- 天下（世界大势） ---- */
+E('e_moChao','天下',0,0,null,'魔潮将至',
+ '天边滚过墨色云涛——魔道大军趁乱出世，沿途宗门连连告急！',
+ [
+  {t:'仗剑迎敌',f:function(s){return fight(s,16+s.realm*6,
+    function(){gs(s,300);stAdd(s,'daoxin',2);logT(s,'魔潮之战，阵斩妖修');return '你在乱军中七进七出，斩妖修三员，威名传遍四方。<br>'+G('灵石+300，道心+2');},
+    function(){hurt(s);gs(s,-100);return '魔潮如渊如海，你血战脱身，九死一生。<br>'+Rd('身负重伤，灵石-100');});}},
+  {t:'携众避祸',f:function(s){stAdd(s,'daoxin',1);return '你带着一村老幼躲进深谷，靠储备熬过三月。<br>乱世之中，活着就是本事。'+G('道心+1');}},
+  {t:'趁乱取利',f:function(s){
+    if(ck(30+s.qiyun*4)){gs(s,400);stAdd(s,'daoxin',-1);return '你专挑乱兵尸堆"打扫战场"，收获颇丰。<br>'+G('灵石+400')+Rd('，道心-1');}
+    hurt(s);return '你摸进弃营，正撞上没走干净的魔修。<br>'+Rd('身负重伤');}}
+ ]);
+E('e_daBi','天下',0,1,function(s){return !!s.sect},'宗门大比',
+ '十年一度宗门大比，各峰弟子摩拳擦掌，魁首可入藏经阁选功法！',
+ [
+  {t:'放手一战',f:function(s){var need=Math.round(pw(s)*(0.75+Math.random()*0.6));
+    if(pw(s)+R(0,10)>=need){s.contrib+=300;gs(s,400);stAdd(s,'daoxin',1);s.daBiWin=true;logT(s,'宗门大比魁首');
+      return '连败十一人！你立于擂台之巅，满山欢呼。<br>'+G('贡献+300，灵石+400，道心+1，道韵+2');}
+    s.contrib+=50;gx(s,150);return '你止步前八。虽败犹荣，回房复盘三日。<br>'+G('贡献+50，修为+150');}},
+  {t:'做赛会执事',f:function(s){s.contrib+=80;gs(s,120);return '你忙里忙外操持赛务，长老们赞你稳重。<br>'+G('贡献+80，灵石+120');}},
+  {t:'闭门避赛',f:function(s){gx(s,100);return '喧闹是别人的，你只想安静修炼。<br>'+G('修为+100');}},
+  {t:'剑心通明，一战登顶',req:function(s){return tal('jianxin')},f:function(s){
+    s.contrib+=300;gs(s,400);s.daBiWin=true;logT(s,'宗门大比魁首（剑心无滞）');
+    return '你登台时未携一物，出剑时已胜了。满山寂静，而后欢呼如雷——剑心通明者，无招可破。<br>'+G('贡献+300，灵石+400，道韵+2');}}
+ ]);
+E('e_lingChao','天下',0,0,function(s){return !s.wl},'灵气潮汐',
+ '夜半，天地灵气如潮水暴涨！草木疯长，修士们纷纷出关——此潮将至十载。',
+ [
+  {t:'乘潮苦修',f:function(s){s.wl=10;gx(s,300);logT(s,'灵潮降临，闭关乘潮');
+    return '你搬进洞府，日夜吐纳。十年灵潮，正是赶超之机！<br>'+G('进入灵潮状态：修为获取大增')}},
+  {t:'采卖灵晶',f:function(s){s.wl=6;gs(s,300);return '潮头凝出的灵晶遍布山谷，你采了一大筐。<br>'+G('灵石+300，灵潮减半');}},
+  {t:'告诉乡亲们',f:function(s){s.wl=8;stAdd(s,'daoxin',2);return '你让全村孩童每日晨起吐纳。十年后，村里竟出了三个练气士。<br>'+G('道心+2');}}
+ ]);
+E('e_shengHui','天下',0,0,null,'仙缘盛会',
+ '百年一度的仙缘盛会开幕，万商云集，仙乐飘飘，奇珍异宝摆满十里长街。',
+ [
+  {t:'购求宝物',req:function(s){return s.stones>=300},rt:'需灵石300',f:function(s){
+    gs(s,-300);giveFabao(s,R(2,4));return '你在盛会深处淘到一件被埋没的宝物，摊主自称"祖传"。<br>'+G('获得法宝精进');}},
+  {t:'卖艺献技',f:function(s){gs(s,150);stAdd(s,'qiyun',1);return '你当众演武一场，喝彩如雷，打赏堆了满地。<br>'+G('灵石+150，气运+1');}},
+  {t:'广交仙友',f:function(s){stAdd(s,'qiyun',1);gx(s,100);return '你结识了四方修士，酒过三巡互换传讯符。<br>'+G('气运+1，修为+100');}},
+  {t:'走马观花',f:function(s){stAdd(s,'daoxin',1);return '看遍奇珍，你忽然觉得：修行路上，这些热闹都是擦肩的风景。<br>'+G('道心+1');}},
+  {t:'与道侣同游盛会',req:function(s){return s.daolv&&!s.daolvDead},f:function(s){
+    gs(s,-100);stAdd(s,'qiyun',1);stAdd(s,'daoxin',1);
+    return '你们在灯下买了一堆毫无用处的玩意儿，笑得像两个孩子。修行万里，不过为有人共黄昏。<br>'+G('气运+1，道心+1');}}
+ ]);
+E('e_yaoLuan','天下',0,1,null,'妖乱四起',
+ '深山妖王出关，率群妖下山掠食，官府与修士联军告急。',
+ [
+  {t:'加入联军',f:function(s){return fight(s,18+s.realm*5,
+    function(){gs(s,350);stAdd(s,'daoxin',1);logT(s,'妖乱之战，建功');return '联军死伤惨重，最终斩杀妖王。你的名字出现在了庆功榜上。<br>'+G('灵石+350，道心+1');},
+    function(){hurt(s);gs(s,-100);return '妖王一声吼，联军溃退。你背着重伤的同袍撤了下来。<br>'+Rd('身负重伤，灵石-100');});}},
+  {t:'守护后方',f:function(s){stAdd(s,'daoxin',1);return '你组织村人挖壕设障、坚壁清野。妖群过境，村子竟完好无损。<br>'+G('道心+1');}},
+  {t:'深山采药济军',f:function(s){gs(s,200);stAdd(s,'daoxin',1);return '你冒着妖气采回整筐金疮药，军医赞不绝口。<br>'+G('灵石+200，道心+1');}}
+ ]);
+
+/* ---- 出身专属 ---- */
+E('e_jiaChuan','人情',5,1,function(s){return s.origin===7},'家传枪谱',
+ '父亲的旧木箱底，压着一卷家传枪谱。纸页泛黄，字迹力透纸背："将门之后，枪比命硬。"',
+ [
+  {t:'闻鸡起舞，苦练枪法',f:function(s){
+    if(ck(40+s.bones*4)){stAdd(s,'bones',1);gx(s,250);logT(s,'习得家传枪法');return '三百个日夜，你把一杆木枪使出了破空之声。<br>父亲若在天有灵，当浮一大白。'+G('根骨+1，修为+250');}
+    gx(s,100);stAdd(s,'daoxin',1);return '枪谱后半卷残缺，你只能练个形似。但那份心气，是真的。<br>'+G('修为+100，道心+1');}},
+  {t:'弃枪学剑',f:function(s){stAdd(s,'wuxing',1);return '"家传是家传，我是我。"你把枪谱供上，改练了剑。<br>纸上力透纸背的字，仿佛微微一顿。'+G('悟性+1');}},
+  {t:'以家传枪法从军',f:function(s){return fight(s,12+s.realm*3,
+    function(){gs(s,300);stAdd(s,'daoxin',1);logT(s,'从军立功');return '边关三年，你凭一杆枪挣了个出身。军中兄弟，皆是生死之交。<br>'+G('灵石+300，道心+1');},
+    function(){gs(s,-80);return '流矢无眼。你在伤兵营里躺了一个月，学会了给自己缝伤口。<br>'+Rd('灵石-80，身负重伤');});}},
+  {t:'卖给古董商',f:function(s){gs(s,250);stAdd(s,'daoxin',-2);return '古董商捧着枪谱如获至宝："将门旧物，好价！"<br>你数钱的手一直很稳，只是那晚的梦里全是枪。'+Rd('灵石+250，道心-2');}}
+ ]);
+E('e_cangShu','人情',5,1,function(s){return s.origin===2},'家藏万卷',
+ '老宅阁楼里翻出一整箱先祖手抄的孤本——批注密密麻麻，是几代人的心血。',
+ [
+  {t:'挑灯通读',f:function(s){
+    if(ck(35+s.wuxing*4)){stAdd(s,'wuxing',1);gx(s,300);return '三个月足不出户。出阁楼那日，你觉得自己在书里活了好几辈子。<br>'+G('悟性+1，修为+300');}
+    gx(s,150);return '书海浩瀚，你只啃下了三成，但三成也够用了。<br>'+G('修为+150');}},
+  {t:'捐给宗门藏经阁',req:function(s){return !!s.sect},f:function(s){
+    s.contrib+=300;stAdd(s,'daoxin',1);return '长老们翻着批注连连惊叹，破例记你大功，还许你入阁自由借阅。<br>'+G('贡献+300，道心+1');}},
+  {t:'卖给书商',f:function(s){gs(s,400);stAdd(s,'daoxin',-1);return '书商给价痛快。你数钱的时候，闻到箱底最后一缕陈年墨香散了。<br>'+Rd('灵石+400，道心-1');}},
+  {t:'封箱留予后人',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你把箱子原样封好放回阁楼，又在批注末页添了一行自己的字。<br>'+G('道心+1，气运+1');}}
+ ]);
+E('e_shangJia','人情',5,1,function(s){return s.origin===3},'家业相托',
+ '父亲病倒前，把商号的账册和一枚印章交到你手上："这摊子，交给你了。"',
+ [
+  {t:'整顿商号',f:function(s){
+    if(ck(45+s.wuxing*3)){gs(s,500);stAdd(s,'daoxin',1);return '你裁了三个吃空饷的管事，重开两条商路。年底盘账，利润翻番。<br>'+G('灵石+500，道心+1');}
+    gs(s,-150);return '商号的水比你想的深。你勉强撑住场面，还亏了一笔。<br>'+Rd('灵石-150');}},
+  {t:'以商养修',f:function(s){gs(s,200);gx(s,200);return '你雇了掌柜打理生意，自己当甩手掌柜，用商号的灵石供给修行。<br>两不耽误。'+G('灵石+200，修为+200');}},
+  {t:'散尽家业入道',f:function(s){gs(s,-s.stones);stAdd(s,'daoxin',3);stAdd(s,'qiyun',2);logT(s,'散尽家财，一心向道');
+    return '你把商号分给伙计，田产捐给义庄，只背一个包袱出门。<br>身后家业万贯，身前大道三千——你选了后者。'+G('道心+3，气运+2');}},
+  {t:'转卖商号',f:function(s){gs(s,600);return '买家给的价不低。落印那一刻，你忽然想起小时候在柜台下睡觉的夏天。<br>罢了，钱是真的。'+G('灵石+600');}}
+ ]);
+
+/* ---- 人情/情缘 ---- */
+E('e_zhiYin','人情',5,1,function(s){return s.daoxin>=7},'高山流水',
+ '渡口亭中，有人抚琴。琴声入耳的刹那，你竟从音里听出了自己这些年没说出口的东西。',
+ [
+  {t:'以剑鞘击柱和之',req:function(s){return f(s,'jianchi')||tal('jianxin')},f:function(s){
+    stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);logT(s,'亭中琴剑相和');
+    return '你以剑鞘敲着亭柱应和。一曲终了，抚琴人抚掌大笑："平生难得一知音！"<br>'+G('道心+1，气运+1');}},
+  {t:'盘膝听曲',f:function(s){stAdd(s,'daoxin',1);gx(s,150);return '你听了整整一个下午。有些东西说不出来，但心里松快了。<br>'+G('道心+1，修为+150');}},
+  {t:'与他论道',f:function(s){
+    if(ck(45)){gx(s,220);stAdd(s,'wuxing',1);return '琴者原是位隐修。你们从音律谈到道法，临别互赠心得。<br>'+G('悟性+1，修为+220');}
+    return '你们聊了半天，发现彼此道途迥异，观点南辕北辙——但也各有所得。';}},
+  {t:'曲罢即走',f:function(s){return '你听完最后一音，起身赶路。<br>知音可遇不可求，遇了，也不必强留。';}}
+ ]);
+E('e_tongMing','人情',4,2,null,'同名疯道人',
+ '市集尽头一个疯道人拽住你，直呼你的名字——一字不差。你从未见过他。',
+ [
+  {t:'与他同坐半日',f:function(s){
+    if(ck(40+s.wuxing*3)){wudao(s,4);return '他絮絮叨叨讲了一堆疯话。讲到日头偏西，你忽然从疯话里听出了一句真言。<br>'+G('进入悟道状态');}
+    stAdd(s,'daoxin',1);return '疯话听不懂，但他分了你半张饼。饼是凉的，心里是热的。<br>'+G('道心+1');}},
+  {t:'请他喝酒',req:function(s){return s.stones>=80},f:function(s){
+    gs(s,-80);stAdd(s,'qiyun',1);return '三碗下肚，他指着你的鼻子说："你我同名，是因为我算到了你。"<br>说完把酒钱袋子塞给你，飘然而去。袋里碎银，刚好够买十坛。'+G('气运+1');}},
+  {t:'追问自己是谁',f:function(s){
+    if(ck(35+s.daoxin*4)){stAdd(s,'daoxin',2);return '他盯着你看了很久，忽然哭了："你终于来问了。"<br>那一夜的长谈，你记了一辈子。'+G('道心+2');}
+    xinmo(s);return '他不答，只是笑。那笑声跟了你三天，挥之不去。<br>'+Rd('心魔滋生');}},
+  {t:'挣脱走人',f:function(s){return '你甩开他的手快步离开。<br>身后传来一声轻笑："下辈子，记得还我半张饼。"';}}
+ ]);
+E('e_yueLao','情缘',4,1,function(s){return !s.yuan&&!s.yuanFail&&!s.daolv&&!s.daolvDead&&s.age>=18},'月老祠前',
+ '破落的月老祠前挂满褪色红绳。庙祝眯着眼看你："有缘人，求一根么？"',
+ [
+  {t:'求一根红绳',req:function(s){return s.stones>=20},f:function(s){
+    gs(s,-20);
+    if(ck(55+s.qiyun*3)){s.yuan={n:pick(NPC_X)+pick(NPC_M),tr:pick(NPC_TR),st:1};
+      return '红绳系上手腕的第七天，你在山道上遇上了那位' + s.yuan.n + '（' + s.yuan.tr + '）。<br>庙祝的话，应验得有点快。'+G('结识有缘人');}
+    return '红绳戴了三个月毫无动静。你正想摘，绳结忽然自己松了——也许是说，缘分未到，不必强求。';}},
+  {t:'替爹娘求平安',f:function(s){stAdd(s,'daoxin',2);stAdd(s,'qiyun',1);return '你给二老各求了一道平安符。庙祝夸你孝顺，多塞了块麦芽糖。<br>'+G('道心+2，气运+1');}},
+  {t:'顺手帮着修祠',f:function(s){gs(s,-40);stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你搭手把塌了的半边祠顶修了。庙祝也不道谢，只往你手里塞了根红绳："结个善缘。"<br>'+G('道心+1，气运+1');}},
+  {t:'不信这些',f:function(s){stAdd(s,'daoxin',1);return '"姻缘天定？我自己的路都还没走明白。"<br>你径直走过祠门。庙祝也不恼，笑着摇了摇签筒。'+G('道心+1');}}
+ ]);
+
+/* ---- 宗门（高境界） ---- */
+E('e_miJing','宗门',5,3,function(s){return !!s.sect},'宗门秘境',
+ '宗门秘境三年一开。执事长老点名让你领队入内——上一批进去十二人，出来九个。',
+ [
+  {t:'直趋秘境深处',f:function(s){
+    if(ck(35+s.realm*4+s.qiyun*2)){gx(s,500);var g=randGongfa(s);s.contrib+=200;
+      return '你们在秘境最深处寻得上代弟子留下的洞府。三日光景，满载而归。<br>'+G('修为大进，贡献+200'+(g?'，习得《'+g.n+'》':''));}
+    s.contrib+=50;return '秘境深处兽吼如雷，你们且战且退，好歹全员活着出来了。<br>'+Rd('身负重伤')+G('，贡献+50');}},
+  {t:'只在边缘采药',f:function(s){gs(s,250);s.contrib+=80;gx(s,150);return '边缘灵药虽寻常，架不住量多。你们满载而归，安安稳稳。<br>'+G('灵石+250，贡献+80，修为+150');}},
+  {t:'带新人练手',f:function(s){s.contrib+=150;stAdd(s,'daoxin',1);gx(s,100);
+    return '你带着五个新入门的师弟师妹。回程时，他们看你的眼神像看亲哥。<br>'+G('贡献+150，道心+1，修为+100');}},
+  {t:'暗卖入场名额',f:function(s){gs(s,500);s.contrib-=150;stAdd(s,'daoxin',-2);
+    return '散修们排着队抢购你的名额。钱来得容易，可执事堂查账那天，你手心全是汗。<br>'+Rd('灵石+500，贡献-150，道心-2');}}
+ ]);
+E('e_qinChuan','宗门',4,4,function(s){return !!s.sect&&s.gongfa.length>=1},'亲传之争',
+ '长老放话：本脉亲传，只收一人。候选的几人里，有你。',
+ [
+  {t:'堂前全力一搏',f:function(s){var need=Math.round(pw(s)*(0.8+Math.random()*0.5));
+    if(pw(s)+R(0,10)>=need){var g=randGongfa(s);s.contrib+=300;logT(s,'得长老亲传');
+      return '你在长老面前把平生所学演了个通透。长老抚须良久："亲传，就是你了。"<br>'+G('贡献+300'+(g?'，习得《'+g.n+'》':''));}
+    gx(s,200);s.contrib+=80;return '你演到一半，长老抬手止住："根基不错，火候未到。"<br>虽败犹荣。'+G('贡献+80，修为+200');}},
+  {t:'让给同门',f:function(s){stAdd(s,'daoxin',2);stAdd(s,'qiyun',1);s.contrib+=100;
+    return '你推说根骨不济，把名额让给了师弟。他红着眼眶给你磕了个头。<br>多年后他做了长老，你的话在他那儿，比谁都管用。'+G('道心+2，气运+1，贡献+100');}},
+  {t:'给执事送厚礼',req:function(s){return s.stones>=500},f:function(s){
+    gs(s,-500);
+    if(ck(50)){s.contrib+=200;var g2=randGongfa(s);return '礼数到了，话也通了。名单公布那天，你的名字在最上面。<br>这算不算本事？你不想深究。'+G('贡献+200'+(g2?'，习得《'+g2.n+'》':''));}
+    gs(s,250);return '执事收了礼，名单上却没有你——"今年长老自有属意。"<br>礼，倒是退了一半回来。'+Rd('灵石-250');}},
+  {t:'静修蓄势，来年再争',f:function(s){gx(s,250);stAdd(s,'daoxin',1);return '你谢过长老，回洞府去了。<br>争一时者争一世，你偏不急。'+G('修为+250，道心+1');}}
+ ]);
+
+/* ---- 天下（高境界大势） ---- */
+E('e_xianFuShi','天下',0,6,null,'仙人遗府出世',
+ '紫气横贯三千里——上古仙人的遗府现世！四方修士如过江之鲫，较技斗法，血染山门。',
+ [
+  {t:'首批破阵入府',f:function(s){
+    if(ck(25+s.realm*4+s.qiyun*2)){var fb=giveFabao(s,R(4,5));gx(s,800);
+      return '你在众人抢夺外围宝物时直取主殿，得了一段仙人造化！出府时，雷云为你送行。<br>'+G('法宝「'+fb.n+'」（'+FBTIER[fb.tier]+'），修为暴涨');}
+    hurt(s);xinmo(s);gs(s,-200);return '护府大阵绞杀万物！你靠着装死逃过一劫，储物袋都被扒了。<br>'+Rd('身负重伤，心魔滋生，灵石-200');}},
+  {t:'随大流捡漏',f:function(s){
+    if(ck(40+s.qiyun*3)){gs(s,500);gx(s,300);return '大能们在主殿斗法，你在偏殿捞了不少漏网之宝。<br>'+G('灵石+500，修为+300');}
+    gs(s,100);return '人山人海，你连偏殿的门都没挤进去，只在外围捡了两块"仙砖"。<br>回去一鉴定——真是仙砖。'+G('灵石+100');}},
+  {t:'在山外摆摊卖水',f:function(s){gs(s,350);stAdd(s,'daoxin',1);return '十万修士在山上斗法，渴了都得买你的"仙山灵泉"。你数钱数到手抽筋。<br>'+G('灵石+350，道心+1');}},
+  {t:'远远看一眼就回',f:function(s){stAdd(s,'daoxin',1);gx(s,100);return '你立在远山，看那道紫气看了半日。<br>仙人已乘黄鹤去，此地空余黄鹤楼。回去修炼。'+G('道心+1，修为+100');}}
+ ]);
+E('e_tianCai','天下',0,4,null,'天才榜易主',
+ '《天才榜》半年一换。这一期，你的名字排进了前十——而前十，意味着全天下都可以来挑战你。',
+ [
+  {t:'坐榜应战',f:function(s){var need=Math.round(pw(s)*(0.8+Math.random()*0.7));
+    if(pw(s)+R(0,10)>=need){gs(s,600);if(s.sect)s.contrib+=200;logT(s,'天才榜连守十七场');
+      return '三月之内，十七人登门，无一胜你。你的名字，钉在了榜上。<br>'+G('灵石+600'+(s.sect?'，贡献+200':'')+'，名动一方');}
+    gs(s,100);return '第七位挑战者险胜你半招。你走下擂台时，围观者已在议论下一个名字。<br>'+Rd('身负重伤')+G('，灵石+100（出场费）');}},
+  {t:'闭关百日，避其锋芒',f:function(s){gx(s,400);stAdd(s,'daoxin',1);return '你贴了张"闭关"就钻进了洞府。<br>百日之后出关，榜还在，你也还在。'+G('修为+400，道心+1');}},
+  {t:'广发英雄帖，以武会友',f:function(s){
+    if(ck(45)){stAdd(s,'qiyun',1);gs(s,300);gx(s,200);return '各路英杰齐聚。胜固欣然，败亦尽兴——一场大比下来，你多了十几个可托生死的道友。<br>'+G('气运+1，灵石+300，修为+200');}
+    gs(s,-100);return '英雄帖发出去，来的却有个狠角色。你被揍得不轻，但打完喝酒时，也认了个狠人兄弟。<br>'+Rd('灵石-100，身负重伤');}},
+  {t:'买通榜主，把自己划下去',req:function(s){return s.stones>=400},f:function(s){
+    gs(s,-400);stAdd(s,'daoxin',-1);return '榜主收钱办事，你的名字悄无声息地划掉了。<br>清净是清净了，只是夜深人静时，有点不是滋味。'+Rd('灵石-400，道心-1');}}
+ ]);
+E('e_daoGuo','天下',0,3,null,'问道大会',
+ '十年一届问道大会，不斗法，只论道。三十六座高台，谁讲得通透，谁便是万修之师。',
+ [
+  {t:'登台讲道',f:function(s){
+    if(ck(30+s.wuxing*4+s.daoxin*2)){gx(s,500);stAdd(s,'wuxing',1);stAdd(s,'qiyun',1);logT(s,'问道大会，讲动一方');
+      return '你讲的是自己半生磕磕绊绊的路。讲到动情处，台下鸦雀无声。<br>散场时，三百修士向你执弟子礼。'+G('悟性+1，气运+1，修为大进');}
+    gx(s,150);return '你讲了半炷香，被台下一句"敢问道友修为几何"问得面红耳赤。<br>回洞府恶补了半年。'+G('修为+150');}},
+  {t:'台下听讲',f:function(s){
+    if(ck(40+s.wuxing*3)){wudao(s,5);return '高台论道，句句机锋。某一瞬间，你只觉天雷滚过识海。<br>'+G('进入悟道状态');}
+    gx(s,180);return '你记了三大本笔记，回去翻了三个月。<br>'+G('修为+180');}},
+  {t:'与邻座辩法',f:function(s){
+    if(ck(45+s.wuxing*3)){gx(s,300);stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);return '你们从午时辩到掌灯，谁也不服谁，最后互相执了一礼——是道友了。<br>'+G('修为+300，道心+1，气运+1');}
+    gx(s,100);return '辩到激烈处，你发现自己连原本的观点都忘了。<br>白辩了，但好像也没白辩。'+G('修为+100');}},
+  {t:'不去，修自己的',f:function(s){stAdd(s,'daoxin',1);gx(s,120);return '"道在己身，不在人嘴。"<br>你在洞府静修七日，出关时山风正好。'+G('道心+1，修为+120');}}
+ ]);
+
+/* ---- 道心 ---- */
+E('e_xinFuZao','道心',5,1,function(s){return s.daoxin<=3},'心浮气躁',
+ '接连数月，你的修为纹丝不动。打坐时杂念纷飞，看什么都烦，连山鸟叫两声都想骂。',
+ [
+  {t:'背起行囊去云游',f:function(s){stAdd(s,'daoxin',1);stAdd(s,'qiyun',1);gx(s,100);
+    return '你走了三个月，看了大江、看了古寺、看了炊烟。<br>回山那日，坐下来，一次入定。'+G('道心+1，气运+1，修为+100');}},
+  {t:'寻个酒肆买醉',req:function(s){return s.stones>=100},f:function(s){
+    gs(s,-100);stAdd(s,'daoxin',1);return '你喝了个酩酊大醉，跟同桌的陌生人把半生委屈都倒了出来。<br>对方听完拍拍你的肩："道友，都一样，都一样。"<br>'+G('道心+1');}},
+  {t:'下山找茬打一架',f:function(s){return fight(s,14+s.realm*4,
+    function(){stAdd(s,'daoxin',1);gs(s,100);return '你找了个看不顺眼的邪修干了一架。打赢那一刻，郁气散尽——原来你是憋着劲没处使。<br>'+G('道心+1，灵石+100');},
+    function(){stAdd(s,'daoxin',1);return '被人按在地上摩擦。爬起来的时候，你反而笑了——知道自己几斤几两，心就静了。<br>'+Rd('身负重伤')+G('，道心+1');});}},
+  {t:'死磕苦修',f:function(s){
+    if(ck(30+s.daoxin*4)){stAdd(s,'daoxin',2);return '你把自己按在蒲团上整整一月。最后一日，所有的躁，忽然就沉下去了。<br>'+G('道心+2');}
+    xinmo(s);hurt(s);return '强扭的瓜不甜，强压的火反噬。你走火入魔了一回。<br>'+Rd('心魔滋生，身负重伤');}}
+ ]);
+/* ================= 逻辑层 ================= */
+var S=null,M=null,pend=null,cur=null;
+
+function newMeta(){M={daoYun:0,lives:0,tal:[],best:0,rrLeft:3}}
+function fateObj(fid){for(var i=0;i<FATES.length;i++)if(FATES[i].id===fid)return FATES[i];return null}
+function fateExpB(s){var b=0;s.fates.forEach(function(fid){var t=fateObj(fid);if(t&&t.expB)b+=t.expB});return b}
+function expMult(s){
+  var m=LINGGEN[s.lg].m*(1+fateExpB(s));
+  if(tal('daoti'))m*=1.25;
+  s.gongfa.forEach(function(gid){var g=GONGFA[gid];if(g&&g.expB)m*=1+g.expB});
+  if(s.fabao&&s.fabao.tier>=3)m*=1.1;
+  if(s.daolv){m*=1.15;if(tal('shuangXiu'))m*=1.3}
+  s.st.forEach(function(x){if(x.n==='重伤')m*=0.6;if(x.n==='悟道')m*=1.5});
+  if(s.wl>0)m*=1.5;
+  return m;
+}
+function expYr(s){return (5+s.wuxing*1.5)*expMult(s)}
+function pw(s){
+  var p=s.bones*2.5+s.realm*6;
+  s.gongfa.forEach(function(gid){var g=GONGFA[gid];if(g&&g.pw)p+=g.pw});
+  if(s.fabao)p+=s.fabao.tier*2;
+  if(f(s,'jianchi'))p+=5;
+  if(tal('jianxin'))p+=8;
+  if(f(s,'moGu'))p+=4;
+  s.st.forEach(function(x){if(x.n==='重伤')p*=0.6});
+  return Math.round(p);
+}
+function breakChance(s){
+  var c=REALMS[s.realm].base+(s.bones-5)*1.6+(s.daoxin-5)*1.2;
+  s.gongfa.forEach(function(gid){var g=GONGFA[gid];if(g&&g.brk)c+=g.brk});
+  if(s.fabao&&s.fabao.tier>=5)c+=10;
+  if(tal('tianMing'))c+=5;
+  if(s.pills.pjing>0)c+=15;
+  s.st.forEach(function(x){if(x.n==='心魔')c-=15});
+  return clamp(Math.round(c),5,97);
+}
+function marketDiscount(s){
+  var d=1;if(tal('danxiang')){} s.gongfa.forEach(function(gid){if(GONGFA[gid]&&GONGFA[gid].pill)d-=GONGFA[gid].pill});
+  return Math.max(0.6,d);
+}
+
+/* ---- 开局 ---- */
+function rollOne(){
+  var fl=[],oi=R(0,ORIGINS.length-1);
+  var tot=0,i;LINGGEN.forEach(function(l){tot+=l.w});
+  var r=Math.random()*tot;for(i=0;i<LINGGEN.length;i++){r-=LINGGEN[i].w;if(r<=0)break}
+  var li=Math.min(i,LINGGEN.length-1);
+  var n=ck(30)?2:1,pool=FATES.slice();
+  for(var j=0;j<n&&pool.length;j++){
+    var t2=0;pool.forEach(function(x){t2+=x.w});
+    var rr=Math.random()*t2,acc=0,pd=null;
+    pool.forEach(function(x){acc+=x.w;if(!pd&&rr<=acc)pd=x});
+    if(pd){fl.push(pd.id);pool=pool.filter(function(x){return x.id!==pd.id})}
+  }
+  return {name:pick(XING)+pick(MING),origin:oi,lg:li,fates:fl,baseAge:R(58,74)};
+}
+function lifeEstimate(p){
+  var a=p.baseAge,o=ORIGINS[p.origin];
+  if(o.maxAge)a+=o.maxAge;
+  p.fates.forEach(function(fid){var t=fateObj(fid);if(t&&t.maxAge)a+=t.maxAge});
+  if(tal('guixi'))a+=15;
+  return a;
+}
+function startLife(){
+  var r=pend;pend=null;M.lives++;
+  var s={name:r.name,origin:r.origin,lg:r.lg,fates:r.fates};
+  s.age=R(14,18);s.maxAge=r.baseAge;
+  s.realm=0;s.exp=tal('guiZu')?180:0;s.stones=R(50,120);
+  s.bones=5;s.wuxing=5;s.qiyun=5;s.daoxin=5;
+  var o=ORIGINS[s.origin];
+  ['bones','wuxing','qiyun','daoxin'].forEach(function(k){if(o[k])s[k]+=o[k]});
+  if(o.stones)s.stones+=o.stones;if(o.maxAge)s.maxAge+=o.maxAge;
+  s.fates.forEach(function(fid){var t=fateObj(fid);if(!t)return;
+    ['bones','wuxing','qiyun','daoxin'].forEach(function(k){if(t[k])s[k]+=t[k]});
+    if(t.all)['bones','wuxing','qiyun','daoxin'].forEach(function(k){s[k]+=1});
+    if(t.stones)s.stones+=t.stones;if(t.maxAge)s.maxAge+=t.maxAge;});
+  if(tal('huigen'))s.wuxing+=2;
+  if(tal('guxiang'))s.bones+=2;
+  if(tal('fuyuan'))s.qiyun+=2;
+  if(tal('panshi'))s.daoxin+=2;
+  if(tal('guixi'))s.maxAge+=15;
+  if(tal('shengcai'))s.stones+=400;
+  ['bones','wuxing','qiyun','daoxin'].forEach(function(k){s[k]=clamp(s[k],1,15)});
+  s.fl=[];if(o.flag)s.fl.push(o.flag);
+  s.fates.forEach(function(fid){var t=fateObj(fid);if(t&&t.flag)s.fl.push(t.flag)});
+  s.sect=null;s.contrib=0;s.gongfa=[];s.fabao=null;
+  s.yuan=null;s.yuanFail=false;s.daolvDead=false;
+  s.st=[];s.pills={pjing:0,yanshou:0,xisui:0};
+  s.wl=0;s.nextW=R(25,40);s.pendW=false;
+  s.lastEv='';s.evCount=0;s.tl=[];s.hist=[];s.dead=null;s.daBiWin=false;s.gain=0;
+  s.tl.push({a:s.age,t:'降生于世（'+ORIGINS[s.origin].n+'，'+LINGGEN[s.lg].n+'）'});
+  S=s;cur=null;save();show('scr-main');render();
+}
+
+/* ---- 时间与事件 ---- */
+function passYears(n){
+  S.age+=n;
+  S.st=S.st.filter(function(x){x.y-=n;return x.y>0});
+  if(S.wl>0)S.wl=Math.max(0,S.wl-n);
+  if(S.age>=S.nextW){S.pendW=true;S.nextW=S.age+R(25,40)}
+  if(S.age>=S.maxAge){die('寿元耗尽');return true}
+  return false;
+}
+var IDLE=[
+ '山中日月长，你按部就班地修行、劳作，平淡却踏实。',
+ '无风无浪的一段日子。夜里星辰格外亮，你多坐了两个时辰。',
+ '你帮邻里修了屋顶，换了两斤米。日子就这么过着。',
+ '你把周天经脉又理了一遍，进境虽缓，根基却更牢了。',
+ '忙碌与安宁交替，炉上的药香陪伴了整个季节。',
+ '檐下听雨，你忽然想起初见仙门时的模样。',
+ '田里的庄稼收成不错，你顺手给隔壁瞎眼阿婆修了篱笆。',
+ '一只白鹤落在院墙上看了你半晌，而后振翅远去。',
+ '无事发生。有些年份，无事发生本身就是福。',
+ '你在旧物箱底翻出一枚儿时攒下的铜钱，握了握，又放了回去。'
+];
+var IDLE2=[
+ '你把洞府又往深处凿了三丈，灵气浓了几分。',
+ '丹田里那颗金丹缓缓流转，你在吐纳间听见了风的道理。',
+ '山下王朝换了国号。你隔着云海看了一眼，继续打坐。',
+ '与三位道友论道三日，各自有得，各自归山。',
+ '一场大雨落进山谷，你伸手接了半盏，饮尽，甘甜。',
+ '旧伤在阴雨天隐隐作痛。你借痛入境，竟有所悟。',
+ '你替山门外的村子挡了一场山洪。村里人说山神显灵，你笑笑没认。'
+];
+var IDLE3=[
+ '元神出窍百里，看尽人间灯火，归来时心明如镜。',
+ '你在雷云之下静坐一夜，借天威淬炼神魂。',
+ '凡间已过三代人，山下村子里的孩童换了几茬。',
+ '你随手画下的一道符，被凡人供进了庙里，香火不断。',
+ '紫府之中道文自生，你逐字参详，废寝忘食。',
+ '这一甲子无风无雨。你渐渐懂得，寂寥也是道。',
+ '昔年同辈之人尽数作古。你在他们坟前各饮了一杯酒，然后继续赶路。'
+];
+function pickIdle(s){return pick(s.realm>=5?IDLE3:(s.realm>=2?IDLE2:IDLE))}
+function pickEvent(){
+  var pool=EV.filter(function(e){
+    if(e.id===S.lastEv)return false;
+    if(S.realm<e.min)return false;
+    if(e.cond&&!e.cond(S))return false;
+    return true;
+  });
+  if(!pool.length)return null;
+  var tw=0,ws=pool.map(function(e){
+    var w=e.w;
+    if(w<=0)return 0;
+    if(e.tag==='奇遇'){if(tal('xianyuan'))w*=1.6;if(f(S,'sanren'))w*=1.3}
+    if(e.tag==='情缘'&&f(S,'hongluan'))w*=1.7;
+    if(e.tag==='魔道')w*=f(S,'mo')||f(S,'moGu')?1.4:0.6;
+    w*=1+(S.qiyun-5)*0.04;
+    tw+=w;return w;
+  });
+  var r=Math.random()*tw;
+  for(var i=0;i<pool.length;i++){r-=ws[i];if(r<=0)return pool[i]}
+  return pool[pool.length-1];
+}
+function showEvent(e){
+  S.lastEv=e.id;cur={ev:e};render();save();
+}
+/* ---- 天道无常：变数随属性而变（气运偏转好坏概率，根骨/悟性解锁专属变数） ---- */
+var TWISTS=[
+ {w:2,good:1,f:function(s){var n=R(80,300);gs(s,n);return G('途中偶遇旧识，硬塞给你一袋灵石（+'+n+'）')}},
+ {w:1,bad:1,f:function(s){var n=R(50,200);gs(s,-n);return Rd('回头清点行囊，竟莫名少了些灵石（-'+n+'）')}},
+ {w:1,good:1,f:function(s){gx(s,R(80,220));return G('行功一夜，水到渠成（修为精进）')}},
+ {w:1,good:1,f:function(s){wudao(s,4);return G('月下静坐，隐有所悟（进入悟道）')}},
+ {w:1,good:1,f:function(s){stAdd(s,'daoxin',1);return G('经此一事，心境悄然沉淀（道心+1）')}},
+ {w:1,bad:1,f:function(s){hurt(s,s.bones>=8?1:3);return s.bones>=8?Rd('摔了一跤——对铜筋铁骨的你不过是磕了点皮（轻伤）'):Rd('乐极生悲，摔得着实不轻（重伤）')}},
+ {w:1,good:1,cond:function(s){return s.bones>=8},f:function(s){gx(s,60);return G('根基扎实，风波不侵，顺势吐纳（修为+60）')}},
+ {w:1,good:1,cond:function(s){return s.wuxing>=9},f:function(s){wudao(s,5);return G('悟性超群，触类旁通（进入悟道）')}},
+ {w:10,f:null}
+];
+function rollTwist(){
+  var tw=0,ws=TWISTS.map(function(t){
+    var w=t.f?t.w:10;
+    if(t.f&&t.cond&&!t.cond(S))w=0;
+    if(t.f&&w>0){
+      if(t.good)w=Math.max(0.1,w*(1+(S.qiyun-5)*0.12));
+      if(t.bad)w=Math.max(0.1,w*Math.max(0.2,1-(S.qiyun-5)*0.12));
+    }
+    tw+=w;return w;
+  });
+  var r=Math.random()*tw;
+  for(var i=0;i<TWISTS.length;i++){r-=ws[i];if(r<=0)return TWISTS[i]}
+  return TWISTS[TWISTS.length-1];
+}
+function resolveChoice(i){
+  var e=cur.ev,c=e.c[i],r;
+  try{r=c.f(S)}catch(err){r='（天机紊乱，此事不了了之。）'}
+  if(r===null){r='你以神魂为炬，与那道残魂同归于尽。天旋地转间，你听见了自己的心跳，停了。';die('夺舍殒命')}
+  S.evCount++;
+  if(!S.dead){
+    var tw=rollTwist();
+    if(tw.f)r+='<br><br><b style="color:var(--gold);letter-spacing:2px">—— 天道无常 ——</b><br>'+tw.f(S);
+  }
+  cur={res:r,title:e.t,tag:e.tag};
+  histPush(S,{a:S.age,g:e.tag,t:e.t,c:c.t,x:r});
+  render();save();
+}
+function closeResult(){cur=null;render();save()}
+
+/* ---- 突破 ---- */
+function canBreak(){return !S.dead&&S.realm<REALMS.length&&S.exp>=REALMS[S.realm].need}
+function showBreak(){
+  cur={brk:true};render();
+}
+function doBreak(){
+  var c=breakChance(S);
+  var from=REALMS[S.realm].n,ascend=S.realm===REALMS.length-1,r;
+  if(S.pills.pjing>0)S.pills.pjing=0;
+  var ok=ck(c);
+  if(ok&&ascend){
+    r='九霄之上，雷云压城。你在万钧雷霆中护住元神，一步一步，走向那道天门。<br><br>'+G('天门洞开，仙光如瀑——你，飞升了。');
+    logT(S,'渡劫飞升');
+    if(M.best<REALMS.length-1)M.best=REALMS.length-1;
+    die('飞升');
+    histPush(S,{a:S.age,g:'轮回',t:'渡劫飞升',c:'奋力冲关',x:r});
+    cur={res:r,title:'飞升',tag:'轮回',art:'ending'};render();save();return;
+  }
+  if(ok){
+    S.exp-=REALMS[S.realm].need;S.realm++;
+    var add=REALMS[S.realm].life+(f(S,'guixu')?10:0);
+    S.maxAge+=add;
+    S.gongfa.forEach(function(gid){var g=GONGFA[gid];if(g&&g.side)stAdd(S,'daoxin',-1)});
+    logT(S,'突破'+REALMS[S.realm].n+'，寿元+'+add);
+    if(S.realm>M.best)M.best=S.realm;
+    r='轰鸣声中，'+from+'期的壁垒应声而碎！天地灵气疯狂涌入，你在狂喜中长啸不止。<br>'+G('突破至'+REALMS[S.realm].n+'期！寿元+'+add);
+  }else{
+    if(ascend){r='最后一道天雷落下时，你的护体灵光碎了。<br><br>'+Rd('雷劫加身，形神俱灭。');die('渡劫失败');}
+    else{
+      S.exp=Math.round(S.exp*0.7);var ex='';
+      if(ck(30)){hurt(S);ex=Rd('，身负重伤')}
+      if(S.daoxin<5&&ck(25)){xinmo(S);ex+=Rd('，心魔滋生')}
+      S.maxAge-=3;
+      r='关口如铁壁，你数次冲击皆被弹回，气血翻涌不止。<br>'+Rd('突破失败：修为折损三成，寿元-3')+ex;
+    }
+  }
+  histPush(S,{a:S.age,g:'轮回',t:(ascend?'九重雷劫':from+'·冲关'),c:'奋力冲关',x:r});
+  cur={res:r,title:ascend?'渡劫':'冲关',tag:ascend?'天下':'奇遇',art:'brk_'+S.realm};
+  render();save();
+}
+
+/* ---- 死亡与结算 ---- */
+var CAUSE={'寿元耗尽':'大限已至，含笑坐化。','渡劫失败':'渡劫失败，形神俱灭，只余焦土。',
+ '夺舍殒命':'神魂被夺，此身易主。','伤重不治':'旧伤复发，药石无医。','飞升':'天门洞开，乘光而去——此世圆满！'};
+function die(cause){S.dead=cause;S.st=[];save()}
+function daoYunGain(){
+  var d=S.realm*3+(S.daolv&&!S.daolvDead?2:0)+(S.fabao?S.fabao.tier:0)+S.gongfa.length+(S.sect?1:0);
+  d+=Math.floor(S.evCount/12)+Math.floor(S.age/60);
+  if(S.daBiWin)d+=2;
+  if(S.dead==='飞升')d+=25;
+  if(tal('guiJi'))d+=2;
+  return d;
+}
+function showEnd(){
+  if(!S.gain){S.gain=daoYunGain();M.daoYun+=S.gain;M.best=Math.max(M.best,S.realm);save()}
+  $('end-cause').textContent='—— '+S.dead+' ——';
+  $('end-name').textContent=S.name;
+  $('end-art').innerHTML=art(S.dead==='飞升'?'ending':'death','');
+  $('end-art').className='art '+(S.dead==='飞升'?'':'');
+  $('bio').innerHTML=bio();
+  $('end-stats').innerHTML=
+    stbox('享年',S.age+'岁')+stbox('境界',REALMS[S.realm].n)+stbox('历练',S.evCount+'事');
+  $('end-dao').innerHTML='此生凝得道韵<b>'+S.gain+'</b>（累计 '+M.daoYun+'）';
+  show('scr-end');
+}
+function stbox(k,v){return '<div class="st"><b>'+v+'</b><span>'+k+'</span></div>'}
+function bio(){
+  var s=S,p=[];
+  p.push(s.name+'，'+ORIGINS[s.origin].n+'，'+LINGGEN[s.lg].n+'。');
+  if(s.fates.length){var ns=[];s.fates.forEach(function(fid){var t=fateObj(fid);if(t)ns.push(t.n)});
+    p.push('命带「'+ns.join('」「')+'」。')}
+  var ms=s.tl.filter(function(x){return /^(突破|拜入|习得|得法宝|以陨铁|与|宗门大比|魔潮之战|妖乱之战|祭炼)/.test(x.t)});
+  if(ms.length)p.push(ms.map(function(x){return x.a+'岁'+x.t}).join('；')+'。');
+  p.push(CAUSE[s.dead]||'');
+  p.push('终年'+s.age+'岁，一生共历'+s.evCount+'事'+(s.dead==='飞升'?'，飞升而上':'，止步于'+REALMS[s.realm].n+'之境')+'。');
+  return p.join('<br>');
+}
+/* ================= 渲染与交互 ================= */
+var CHMAP={title:'仙',death:'轮',ending:'升',daolv:'侣',fabao:'宝',origin:'缘',sect:'宗',brk:'境'};
+function art(file){
+  var ch=CHMAP[file.split('_')[0]]||'仙';
+  return '<img src="img/'+file+'.jpg" alt="" onerror="artErr(this,\''+ch+'\')">';
+}
+window.artErr=function(img,ch){var p=img.parentNode;p.classList.add('art-fb');p.innerHTML='<span>'+ch+'</span>'};
+function show(id){
+  var all=document.querySelectorAll('.scr');
+  for(var i=0;i<all.length;i++)all[i].classList.remove('on');
+  $(id).classList.add('on');window.scrollTo(0,0);
+}
+var toastTm=null;
+function toast(t){
+  var el=$('toast');el.textContent=t;el.style.display='block';
+  if(toastTm)clearTimeout(toastTm);toastTm=setTimeout(function(){el.style.display='none'},1700);
+}
+function save(){try{localStorage.setItem('bsdx',JSON.stringify({S:S,M:M}))}catch(e){}}
+function load(){try{var d=JSON.parse(localStorage.getItem('bsdx'));if(d&&d.M){M=d.M;S=d.S;return true}}catch(e){}return false}
+
+/* ---- 开局渲染 ---- */
+function renderRoll(){
+  $('roll-world').textContent=M.lives+1;
+  $('roll-name').textContent=pend.name;
+  var o=ORIGINS[pend.origin],lg=LINGGEN[pend.lg];
+  $('roll-art').innerHTML=art('origin_'+o.id);
+  $('roll-origin').textContent=o.n;
+  $('roll-origind').textContent=o.d;
+  $('roll-lg').innerHTML='<span style="color:'+lg.c+'">'+lg.n+'</span>';
+  $('roll-lgd').textContent=lg.d;
+  $('roll-life').textContent='约 '+lifeEstimate(pend)+' 年';
+  var fh='';
+  if(pend.fates.length){
+    pend.fates.forEach(function(fid){var t=fateObj(fid);
+      fh+='<div class="fate-row"><b>「'+t.n+'」</b><p>'+t.d+'</p></div>'});
+  }else fh='<div class="fate-row"><p>命格平平，无特异之处。</p></div>';
+  $('roll-fates').innerHTML='<div class="olabel">命格</div>'+fh;
+  var th='天赋传承：';
+  if(M.tal.length)M.tal.forEach(function(tid){for(var i=0;i<TALENTS.length;i++)if(TALENTS[i].id===tid)th+='<span class="chip gold">'+TALENTS[i].n+'</span>'});
+  else th+='（尚无，可在轮回中点化）';
+  $('roll-tal').innerHTML=th;
+  $('btn-reroll').textContent='天命改签（不限次 · 免费）';
+  show('scr-roll');
+}
+function doReroll(){
+  pend=rollOne();renderRoll();save();toast('天命已改');
+}
+
+/* ---- 主界面渲染 ---- */
+function render(){
+  if(!S)return;
+  $('h-name').textContent=S.name;
+  $('h-realm').textContent=REALMS[S.realm].n;
+  $('h-world').textContent='第'+M.lives+'世';
+  var lifePct=clamp(Math.round(S.age/S.maxAge*100),0,100);
+  $('bar-life').className='bar hp'+(S.maxAge-S.age<10?' danger':'');
+  $('bar-life').innerHTML='<i style="width:'+lifePct+'%"></i>';
+  $('life-txt').textContent=S.age+' / '+S.maxAge;
+  var need=REALMS[S.realm].need,expPct=clamp(Math.round(S.exp/need*100),0,100);
+  $('bar-exp').innerHTML='<i style="width:'+expPct+'%"></i>';
+  $('exp-txt').textContent=S.exp+' / '+need;
+  $('strow').innerHTML=
+    '<div class="st"><b>'+S.stones+'</b><span>灵石</span></div>'+
+    '<div class="st"><b>'+S.bones+'</b><span>根骨</span></div>'+
+    '<div class="st"><b>'+S.wuxing+'</b><span>悟性</span></div>'+
+    '<div class="st"><b>'+S.qiyun+'</b><span>气运</span></div>'+
+    '<div class="st"><b>'+S.daoxin+'</b><span>道心</span></div>';
+  var ch='';
+  S.st.forEach(function(x){
+    var cls=x.n==='重伤'||x.n==='心魔'?'red':(x.n==='悟道'?'gold':'');
+    ch+='<span class="chip '+cls+'">'+x.n+' · 余'+x.y+'年</span>'});
+  if(S.wl>0)ch+='<span class="chip gold">灵气潮汐 · 余'+S.wl+'年</span>';
+  if(S.sect){var sn='';for(var i=0;i<SECTS.length;i++)if(SECTS[i].id===S.sect)sn=SECTS[i].n;
+    ch+='<span class="chip teal">'+sn+' · 贡献'+S.contrib+'</span>'}
+  if(S.daolv&&!S.daolvDead)ch+='<span class="chip pink">道侣 · '+S.daolv+'</span>';
+  if(S.fabao)ch+='<span class="chip gold">法宝 · '+S.fabao.n+'（'+FBTIER[S.fabao.tier]+'）</span>';
+  if(S.pills.pjing>0)ch+='<span class="chip gold">破境丹待用</span>';
+  $('stchips').innerHTML=ch;
+  renderCard();renderActs();
+}
+function tagChip(tag){var c=TAGC[tag]||'';return '<span class="ev-tag chip '+c+'">'+tag+'</span>'}
+function renderCard(){
+  var w=$('card-wrap'),h='';
+  if(cur&&cur.ev){
+    var e=cur.ev;
+    h+='<div class="card">'+tagChip(e.tag)+
+      '<div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>'+
+      '<div id="ev-title">'+e.t+'</div><div id="ev-text">'+e.x+'</div><div id="ev-loc">时年'+S.age+'岁</div><div id="ev-choices">';
+    var shown=0;
+    e.c.forEach(function(c,i){
+      if(c.req&&!c.req(S))return;
+      shown++;
+      h+='<button class="choice" onclick="resolveChoice('+i+')">'+c.t+'</button>'});
+    if(!shown)h+='<button class="choice" onclick="closeResult()">造化弄人，此事竟无从下手……只得作罢</button>';
+    h+='</div></div>';
+  }else if(cur&&cur.brk){
+    var c2=breakChance(S);
+    h+='<div class="card"><div class="art ev-art">'+art('brk_'+S.realm)+'</div>'+tagChip('奇遇')+
+      '<div id="ev-title">'+(S.realm>=REALMS.length-1?'飞升 · 九重雷劫':'冲击 · '+REALMS[S.realm+1].n)+'</div>'+
+      '<div id="ev-text">'+REALMS[S.realm].n+'圆满，只差最后一步。'+REALMS[S.realm].desc+'。<br>此番冲关，把握约 <b class="g">'+c2+'%</b>'+(S.pills.pjing>0?'（含破境丹+15%）':'')+'。'+(S.realm===REALMS.length-1?'<br><b class="rd">渡劫一途，成则登仙，败则身死！</b>':'')+'</div>'+
+      '<div id="ev-choices"><button class="choice" onclick="doBreak()">奋力冲关</button><button class="choice" onclick="cancelBreak()">再积累积累</button></div></div>';
+  }else if(cur&&cur.res!==undefined){
+    h+='<div class="card">'+(cur.tag?tagChip(cur.tag):'')+
+      '<div class="corner c-tl"></div><div class="corner c-tr"></div><div class="corner c-bl"></div><div class="corner c-br"></div>'+
+      (cur.art?'<div class="art ev-art">'+art(cur.art)+'</div>':'')+
+      '<div id="ev-title">'+cur.title+'</div><div id="ev-text">'+cur.res+'</div>'+
+      '<div id="ev-choices">'+
+      (S.dead?'<button class="choice" style="text-align:center;color:var(--gold2)" onclick="showEnd()">— 此生已尽 · 转入轮回 —</button>'
+             :'<button class="choice" style="text-align:center" onclick="closeResult()">继 续</button>')+
+      '</div></div>';
+  }else{
+    h='<div class="card" style="text-align:center;color:#6a6557;font-size:13px;letter-spacing:3px;padding:26px">—— 天 机 未 动 ——</div>';
+  }
+  w.innerHTML=h;
+}
+function renderActs(){
+  var h='';
+  if(cur){
+    $('acts').innerHTML='<div style="grid-column:1/-1;text-align:center;color:#6a6557;font-size:12px;letter-spacing:4px;padding:12px 0">—— 天机已现 · 先断眼前之事 ——</div>';
+    return;
+  }
+  if(canBreak())h+='<button class="btn gold" style="grid-column:1/-1" onclick="showBreak()">◈ 冲击境界 · '+REALMS[S.realm].n+' → '+((S.realm>=REALMS.length-1)?'飞升':REALMS[S.realm+1].n)+' ◈</button>';
+  h+='<button class="btn gold" style="grid-column:1/-1;padding:20px;font-size:19px;letter-spacing:8px" onclick="doAct(\'tap\')">推 演 天 机<small style="letter-spacing:2px;margin-top:6px;font-weight:400">点此 · 岁月流转 1~3 年 · 机缘随机而至</small></button>'+
+     '<button class="btn ghost" style="padding:9px;font-size:13px;letter-spacing:1px" onclick="openHist()">历劫录<small>此生大事记 · 心路始末</small></button>'+
+     '<button class="btn ghost" style="padding:9px;font-size:13px;letter-spacing:1px" onclick="openMarket()">坊 市<small>丹药 · 法宝 · 宗门</small></button>';
+  $('acts').innerHTML=h;
+}
+function cancelBreak(){cur=null;render();save()}
+
+/* ---- 行动：推演天机（点一下，过一年或几年，事件随机而至） ---- */
+function doAct(k){
+  if(!S||S.dead||k!=='tap')return;
+  var y=R(1,3);
+  if(passYears(y)){render();return}
+  S.exp+=Math.round(y*expYr(S));
+  afterAction(y,0,70);
+}
+function afterAction(y,expGain,p){
+  if(expGain)S.exp+=Math.round(expGain);
+  if(S.dead){render();return}
+  if(S.pendW){
+    var ws=EV.filter(function(e){return e.tag==='天下'&&(!e.cond||e.cond(S))});
+    if(ws.length){S.pendW=false;showEvent(pick(ws));return}}
+  if(ck(p)){var e=pickEvent();if(e){showEvent(e);return}}
+  cur={res:pickIdle(S),title:'岁月流转',tag:'人情'};render();save();
+}
+
+/* ---- 坊市 ---- */
+function pillCost(p){return Math.max(1,Math.round(p.cost*marketDiscount(S)))}
+function openMarket(){renderMarket();$('modal').classList.add('on')}
+function closeModal(){$('modal').classList.remove('on')}
+function renderMarket(){
+  var h='<div class="m-hd"><b>坊 市</b><button class="m-x" onclick="closeModal()">×</button></div>';
+  h+='<div class="m-sec">丹 药</div>';
+  PILLS.forEach(function(p){
+    var cost=pillCost(p),dis=false,note='';
+    if(p.id==='yanshou'&&S.pills.yanshou>=3){dis=true;note='（每世限3颗）'}
+    if(p.id==='xisui'&&S.pills.xisui>=2){dis=true;note='（每世限2颗）'}
+    if(p.id==='pjing'&&S.pills.pjing>0){dis=true;note='（已持有）'}
+    if(S.realm<p.need){dis=true;note='（需'+REALMS[p.need].n+'期）'}
+    h+='<div class="shop-item"><div class="si"><b>'+p.n+'</b> <span style="color:var(--gold)">'+cost+' 灵石</span><p>'+p.d+note+'</p></div>'+
+      '<button class="btn mini" onclick="buyPill(\''+p.id+'\')"'+(dis||S.stones<cost?' disabled':'')+'>购买</button></div>';
+  });
+  h+='<div class="m-sec">宗 门</div>';
+  if(!S.sect){
+    if(S.realm>=1){
+      SECTS.forEach(function(st){
+        var dis=st.reqDx&&S.daoxin<st.reqDx;
+        h+='<div class="shop-item"><div class="si"><b>'+st.n+'</b><span style="font-size:11px;color:var(--dim)"> '+st.style+'</span><p>'+st.d+(st.reqDx?'（需道心≥'+st.reqDx+'）':'')+'</p></div>'+
+          '<button class="btn mini" onclick="joinSect(\''+st.id+'\')"'+(dis?' disabled':'')+'>拜入</button></div>';
+      });
+    }else h+='<p style="font-size:12px;color:var(--dim);padding:6px 0">练气之后，方可拜入仙门。</p>';
+  }else{
+    var st2=null;SECTS.forEach(function(x){if(x.id===S.sect)st2=x});
+    h+='<p style="font-size:13px;padding:4px 0">门派：<b class="g">'+st2.n+'</b> · 贡献 <b class="g">'+S.contrib+'</b></p>';
+    h+='<div style="display:flex;gap:8px;flex-wrap:wrap;padding:4px 0">'+
+      '<button class="btn mini" onclick="sectTask()">宗门差事</button>'+
+      '<button class="btn mini" onclick="donate()"'+(S.stones<100?' disabled':'')+'>捐献灵石+100</button></div>';
+    st2.g.forEach(function(g){
+      var owned=S.gongfa.indexOf(g.id)>=0,full=S.gongfa.length>=2;
+      h+='<div class="gongfa-item"><b>《'+g.n+'》</b>（需贡献'+g.cost+' · 灵石'+g.fee+'）<p>'+g.d+'</p>'+
+        (owned?'<span style="color:#7fae95;font-size:12px">✓ 已习得</span>':
+        '<button class="btn mini" onclick="learnGF(\''+g.id+'\')"'+((full||S.contrib<g.cost||S.stones<g.fee)?' disabled':'')+'>修习</button>')+'</div>';
+    });
+  }
+  h+='<div class="m-sec">本命法宝</div>';
+  if(S.fabao){
+    if(S.fabao.tier<5){
+      var rc=400*S.fabao.tier;
+      h+='<div class="shop-item"><div class="si"><b>'+S.fabao.n+'</b>（'+FBTIER[S.fabao.tier]+'）<p>淬炼进阶，法宝愈强，战力愈高</p></div>'+
+        '<button class="btn mini" onclick="refineFB()"'+(S.stones<rc?' disabled':'')+'>淬炼 '+rc+'</button></div>';
+    }else h+='<p style="font-size:12px;color:var(--gold);padding:6px 0">'+S.fabao.n+'已臻仙品，无可再进。</p>';
+  }else h+='<p style="font-size:12px;color:var(--dim);padding:6px 0">尚未拥有法宝，或于奇遇中寻得。</p>';
+  $('m-box').innerHTML=h;
+}
+function buyPill(id){
+  var p=null;PILLS.forEach(function(x){if(x.id===id)p=x});if(!p)return;
+  var cost=pillCost(p);if(S.stones<cost)return;
+  S.stones-=cost;
+  if(p.id==='juqi'){var yr=8*(tal('danxiang')?1.5:1);S.exp+=Math.round(yr*expYr(S));toast('服下聚气丹，修为大涨')}
+  if(p.id==='pjing'){S.pills.pjing=1;toast('破境丹已备，下次突破+15%')}
+  if(p.id==='yanshou'){S.pills.yanshou++;S.maxAge+=8;toast('寿元+8')}
+  if(p.id==='liao'){S.st=S.st.filter(function(x){return x.n!=='重伤'});toast('伤势痊愈')}
+  if(p.id==='xisui'){S.pills.xisui++;stAdd(S,'bones',1);toast('根骨+1')}
+  save();render();renderMarket();
+}
+function joinSect(id){
+  SECTS.forEach(function(st){if(st.id===id){S.sect=id;S.contrib=50;
+    logT(S,'拜入'+st.n);toast('拜入'+st.n)}});
+  save();render();renderMarket();
+}
+function sectTask(){
+  var g=R(60,120),m=R(50,100),dang=false;
+  if(S.gongfa.some(function(gid){return GONGFA[gid]&&GONGFA[gid].xh}))m=Math.round(m*1.6);
+  S.contrib+=g;S.stones+=m;
+  var msg='办完差事：'+G('贡献+'+g+'，灵石+'+m);
+  if(ck(15)){hurt(S);dang=true;msg+='<br>'+Rd('途中遇险，身负重伤')}
+  else toast('差事办妥');
+  S.mktMsg=msg;S.mktDang=dang;
+  save();render();renderMarket();
+  var el=document.createElement('div');el.className='gongfa-item';el.innerHTML=msg;
+  $('m-box').appendChild(el);
+}
+function donate(){S.stones-=100;S.contrib+=100;toast('贡献+100');save();render();renderMarket()}
+function learnGF(gid){
+  var g=GONGFA[gid];if(!g)return;
+  if(S.gongfa.length>=2||S.contrib<g.cost||S.stones<g.fee)return;
+  S.contrib-=g.cost;S.stones-=g.fee;S.gongfa.push(gid);
+  logT(S,'习得《'+g.n+'》');toast('习得《'+g.n+'》');
+  save();render();renderMarket();
+}
+function refineFB(){
+  var rc=400*S.fabao.tier;if(S.stones<rc)return;
+  S.stones-=rc;S.fabao.tier++;
+  toast('淬炼成功：「'+S.fabao.n+'」（'+FBTIER[S.fabao.tier]+'）');
+  save();render();renderMarket();
+}
+
+/* ---- 历劫录 ---- */
+function openHist(){
+  if(!S.hist)S.hist=[];
+  var h='<div class="m-hd"><b>历 劫 录</b><button class="m-x" onclick="closeModal()">×</button></div>';
+  if(!S.hist.length)h+='<p style="font-size:13px;color:var(--dim);padding:8px 0">此生尚无事记。推演天机，往事自会留痕。</p>';
+  S.hist.slice().reverse().forEach(function(x){
+    h+='<div class="hist-item"><div class="hist-hd"><em>'+x.a+'岁</em>'+
+      (x.g?'<span class="chip '+(TAGC[x.g]||'')+'">'+x.g+'</span>':'')+
+      '<b>'+x.t+'</b></div>'+
+      (x.c?'<p class="hist-c">择 · '+x.c+'</p>':'')+
+      '<p class="hist-x">'+x.x+'</p></div>';
+  });
+  $('m-box').innerHTML=h;$('modal').classList.add('on');
+}
+
+/* ---- 一生详录 ---- */
+function openInfo(){
+  var s=S,h='<div class="m-hd"><b>一 生 详 录</b><button class="m-x" onclick="closeModal()">×</button></div>';
+  h+='<div class="m-sec">根 脚</div>';
+  h+='<p style="font-size:13px;line-height:2">'+s.name+' · '+ORIGINS[s.origin].n+' · <span style="color:'+LINGGEN[s.lg].c+'">'+LINGGEN[s.lg].n+'</span><br>'+
+    '战力 <b class="g">'+pw(s)+'</b> · 下一关把握 <b class="g">'+breakChance(s)+'%</b> · 年修为 <b class="g">'+Math.round(expYr(s))+'</b></p>';
+  if(s.gongfa.length){h+='<div class="m-sec">功 法</div>';
+    s.gongfa.forEach(function(gid){var g=GONGFA[gid];h+='<div class="gongfa-item"><b>《'+g.n+'》</b><p>'+g.d+'</p></div>'})}
+  if(s.daolv&&!s.daolvDead)h+='<div class="m-sec">道 侣</div><p style="font-size:13px">'+s.daolv+'（'+s.yuan.tr+'）—— 与你并肩修行之人。</p>';
+  h+='<div class="m-sec">编 年 史</div>';
+  s.tl.slice().reverse().forEach(function(x){h+='<div class="tl-item"><em>'+x.a+'岁</em><span>'+x.t+'</span></div>'});
+  h+='<div class="m-sec">天 外 飞 仙</div>';
+  h+='<div style="display:flex;gap:8px;flex-wrap:wrap;padding:4px 0">'+
+    '<button class="btn mini gold" onclick="cheatStones()">灵石 +999999</button>'+
+    '<button class="btn mini gold" onclick="cheatYun()">道韵 +9999</button></div>';
+  h+='<div class="danger-zone"><button class="btn ghost mini" onclick="wipeSave()">重开此局（清空全部轮回）</button></div>';
+  $('m-box').innerHTML=h;$('modal').classList.add('on');
+}
+function wipeSave(){
+  try{localStorage.removeItem('bsdx')}catch(e){}
+  location.reload();
+}
+
+/* ---- 天外飞仙（作弊） ---- */
+function cheatStones(){if(!S)return;S.stones+=999999;toast('天降灵石 +999999');save();render();openInfo()}
+function cheatYun(){M.daoYun+=9999;toast('天降道韵 +9999');save();
+  if($('scr-shop').classList.contains('on'))renderShop();}
+
+/* ---- 轮回点化（天赋商店） ---- */
+function showShop(){renderShop();show('scr-shop')}
+function renderShop(){
+  $('shop-bal').innerHTML='道韵存量<b>'+M.daoYun+'</b> <button class="btn ghost mini" style="margin-left:10px" onclick="cheatYun()">+9999</button>';
+  var h='';
+  TALENTS.forEach(function(t){
+    var owned=tal(t.id);
+    h+='<div class="tal'+(owned?' owned':'')+'"><b>'+t.n+'</b><p>'+t.d+'</p>'+
+      (owned?'<div class="cost">✓ 已点化</div><button class="btn mini" disabled>生生世世 · 与你同在</button>'
+            :'<div class="cost">'+t.cost+' 道韵</div><button class="btn mini gold" style="margin-top:6px" onclick="buyTal(\''+t.id+'\')"'+(M.daoYun<t.cost?' disabled':'')+'>点化</button>')+'</div>';
+  });
+  $('tal-grid').innerHTML=h;
+}
+function buyTal(id){
+  var t=null;TALENTS.forEach(function(x){if(x.id===id)t=x});
+  if(!t||tal(id)||M.daoYun<t.cost)return;
+  M.daoYun-=t.cost;M.tal.push(id);
+  toast('已点化「'+t.n+'」，来世生效');
+  save();renderShop();
+}
+
+/* ---- 启动 ---- */
+function boot(){
+  if(!load())newMeta();
+  if(!M)newMeta();
+  $('title-art').innerHTML=art('title');
+  $('btn-new').onclick=function(){pend=rollOne();renderRoll()};
+  $('btn-cont').onclick=function(){if(S.dead){showEnd()}else{show('scr-main');render()}};
+  $('btn-info').onclick=openInfo;
+  $('btn-reroll').onclick=doReroll;
+  $('btn-start').onclick=startLife;
+  $('btn-shop').onclick=showShop;
+  $('btn-reinc').onclick=function(){pend=rollOne();renderRoll()};
+  $('modal').onclick=function(e){if(e.target===$('modal'))closeModal()};
+  if(S)$('btn-cont').style.display='block';
+  show('scr-title');
+}
+boot();
+</script></body></html>
